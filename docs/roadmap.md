@@ -1578,3 +1578,58 @@ Gates: `lake build MathFin` + `lake lint` green, `pytest` 50/50, ledger 367/367 
 `AxiomAuditGen` 327 guards (nine new, one per corpus entry) — two of the nine also curated into
 `AxiomAudit.lean` (`cappedCall_payoff_eq`, `value_cappedCall`), 231 curated guards total — no
 `sorry`.
+
+## phase: the bracket is conditional — and the route that replaced the planned one (2026-08-27, corpus 367→368)
+
+The rung above #200. `norm_sq_increment_eq_bracket` gave `𝔼[(M_b − M_a)²] = ⟨M⟩((a,b] × Ω)`; the
+conditional refinement `𝔼[(M_b − M_a)² | 𝓕_a] = 𝔼[⟨M⟩_b − ⟨M⟩_a | 𝓕_a]` was recorded in four
+artifacts as unclaimed, because `bracketMeasure` weights time-and-sample by `φ²` and so integrates
+`ω` out — the conditional form needs the bracket as a *pathwise* object. `PointwiseBracket.lean`
+now proves it (`condExp_band_second_moment`), against `bracketRep`, the ω-wise
+`∫_a^b φ_u(ω)² du` of the `Lp` class's own predictable representative.
+
+**The design of record was dropped, and that is the phase's main content.** Part 1 (2026-08-25)
+recorded a three-step route in the module docstring: polarise both quadratic sides into a bilinear
+form, prove it vanishes on pairs of band generators, show the post-`a` generators span a dense
+subspace, extend by ε. Roughly 800 lines, of which the pair identity's case analysis was already
+200 and half-written. It was replaced because **the identity is the Itô isometry localised**: a
+conditional-expectation identity between integrable variables is an identity of their `𝓕_a`-set
+integrals, and on such a set `𝟙_F` is a bounded `𝓕_a`-measurable factor, so
+`itoIntegralCLM_T_smulAdapted` — the `𝓕_a`-linearity the locality file built for the *first*
+moment — folds it back inside a single Itô integral, that of `𝟙_F·𝟙_{(a,b]}·φ`. Squaring costs
+nothing because `𝟙_F² = 𝟙_F`, so the isometry evaluates the left side, and Tonelli through the
+trim evaluates the right; both meet at `∫_{(a,b]×F} φ² d trim_T`. About 200 lines, no density
+argument, no polarisation and no ε — and the proof now says *why* the theorem holds rather than
+grinding it out.
+
+The generalisable form of that: **whenever an operator has a `T(Z·φ) = Z·T(φ)` lemma for bounded
+`𝓕_a`-measurable `Z`, every unconditional statement about `‖T φ‖` has a conditional refinement for
+free.** Recorded in `docs/patterns.md`.
+
+**What stayed from part 1, and why.** The four conditional Brownian kernels and the band
+generators are kept, not as scaffolding but as the classical facts the abstract theorem is an
+abstraction of, and they reach one case it cannot: `condExp_increment_sq_of_adapted` asks only
+that the coefficient be integrable against the increment, where feeding a coefficient through an
+`L²(trim_T)` integrand requires it bounded. And the band generators earned their keep rather than
+merely being kept: their support at both ends (`bandGen_support`, and its new mirror
+`bandGen_support_after`) is precisely what `ItoIntegralLocality`'s time-locality consumes, which
+pins the elementary integral as a *process* — `0` up to `c`, the explicit `Z·(B_d − B_c)` from `d`
+on — and that is what lets `condExp_bandGen_second_moment` be stated on the increment `M_b − M_a`,
+i.e. with literally the general theorem's left-hand side, and the classical `(d−c)·𝔼[Z²|𝓕_a]` on
+the right. It is the witness that the abstract identity says the classical thing on the one
+integrand whose Itô integral is written out. What is *not* formalised is the evaluation of
+`bracketRep` on that integrand (`Z²·(d−c)`, true by inspection of the representative), which is why
+the witness is an independent derivation rather than a corollary.
+
+**What stays open, stated in every artifact this phase touches.** `bracketRep` is **not** claimed
+adapted — predictability of the representative does not give progressive measurability at this pin
+— so the bracket is delivered through its increments' conditional expectations, not as an adapted
+increasing process; that is also why the right-hand side is a conditional expectation rather than
+the increment itself (which is the classical statement, the increment being `𝓕_b`-measurable). No
+pathwise quadratic variation is constructed: nothing in the file takes a limit of sums along
+partitions, so the identification of `bracketRep` with `[M]` in the partition-limit sense remains
+outside the library. What *is* proved about `bracketRep` beyond the identity: nonnegativity, band
+additivity, and the monotonicity that follows.
+
+Gates: `lake build MathFin` + `lake lint` green, `pytest` 50/50, ledger 368/368 fresh, one new
+curated axiom pin, no `sorry`.

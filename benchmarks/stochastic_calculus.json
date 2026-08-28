@@ -700,6 +700,22 @@
         "formalization_status": "full",
         "formalization_scope": "Full formal proof. Re-export of MathFin.PredictableDensityGeneral.simpleAssembly_sqWeight_denseRange. Derivation: an element of the weighted L^2 orthogonal to every simple process makes h := f^2.g integrable against trim_T with vanishing integral over every predictable rectangle; the pi-lambda core setIntegral_eq_zero_of_orthogonal_pred (weakened for this call from an L^2 class to an integrable function, h being L^1 and generally not L^2) promotes that to every predictable set, and f^2.trim_T is carried by {f != 0}. SCOPE. The weight enters as a measurable predictable f with f^2.trim_T finite (the hypothesis is the IsFiniteMeasure instance); no relation between f and any martingale is used or asserted here."
       }
+    },
+    {
+      "id": "sc-bracket-conditional",
+      "name": "The Bracket is Conditional: 𝔼[(M_b − M_a)² | 𝓕_a] = 𝔼[⟨M⟩_b − ⟨M⟩_a | 𝓕_a]",
+      "description": "For M = φ●B on [0,T] and a ≤ b ≤ T, the conditional second moment of the increment equals the conditional expectation of the pathwise bracket increment ∫_a^b φ_u(ω)² du. The bracket here is the ω-wise time-integral of the squared predictable representative of φ, not a pathwise quadratic variation of M, and it is not claimed to be adapted.",
+      "domain": "stochastic_calculus",
+      "code": {
+        "lean": "import MathFin.Foundations.PointwiseBracket\n\nopen MeasureTheory ProbabilityTheory MathFin\nopen MathFin.ItoIntegralL2 MathFin.ItoIntegralCLM\nopen MathFin.ItoIntegralProcessGeneral MathFin.PointwiseBracket\nopen scoped NNReal ENNReal\n\n/-- **The bracket is conditional.** For `M = φ●B` on `[0,T]` and `a ≤ b ≤ T`, the conditional\n    second moment of the increment is the conditional expectation of the pathwise bracket\n    increment `∫_a^b φ_u(ω)² du` — the defining property quadratic variation exists for, in\n    the form the bracket *measure* cannot state, since it integrates `ω` out. Re-export of\n    `MathFin.PointwiseBracket.condExp_band_second_moment`. -/\ntheorem conditional_second_moment_eq_bracket_increment\n    {Ω : Type*} {mΩ : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ]\n    {B : ℝ≥0 → Ω → ℝ} (hB : IsPreBrownianReal B μ)\n    (hBmeas : ∀ t, Measurable (B t)) (T : ℝ≥0)\n    (φ : Lp ℝ 2 (trimMeasure_T (μ := μ) T hBmeas))\n    {a b : ℝ≥0} (hab : a ≤ b) (hbT : b ≤ T) :\n    (μ[fun ω ↦ (⇑(itoProcessCLM hB T b hBmeas φ) ω\n        - ⇑(itoProcessCLM hB T a hBmeas φ) ω) ^ 2 | natFiltration hBmeas a])\n      =ᵐ[μ] (μ[fun ω ↦ ∫ u in Set.Ioc a b, ((φ : ℝ≥0 × Ω → ℝ) (u, ω)) ^ 2 ∂timeMeasure\n        | natFiltration hBmeas a]) :=\n  MathFin.PointwiseBracket.condExp_band_second_moment (hB := hB) T hBmeas φ hab hbT\n"
+      },
+      "metadata": {
+        "chapter": 7,
+        "reference": "Conditional second-moment (bracket) property of the Ito integral (Karatzas-Shreve 3.2; Revuz-Yor IV.1)",
+        "difficulty": "advanced",
+        "formalization_status": "full",
+        "formalization_scope": "Full formal proof. Re-export of MathFin.PointwiseBracket.condExp_band_second_moment. SCOPE, stated honestly. (1) The bracket is bracketRep, the omega-wise time-integral of the SQUARED REPRESENTATIVE of the Lp class phi; it is not a pathwise quadratic variation of M, and no limit of sums along a sequence of partitions is taken anywhere in the file. (2) bracketRep is NOT claimed adapted or progressively measurable -- predictability of the representative does not give that at this pin -- so this delivers the bracket through its increments' conditional expectations, not as an adapted increasing process. What IS proved about it is nonnegativity, band additivity and the monotonicity that follows (bracketRep_nonneg, bracketRep_add, bracketRep_mono). (3) M is an Ito integral against a Brownian motion on a bounded horizon [0,T], not a general continuous L^2 martingale. (4) The identity is between the two CONDITIONAL EXPECTATIONS, which is the classical statement: the bracket increment is 𝓕_b-measurable, not 𝓕_a-measurable, so no stronger form is available without adaptedness."
+      }
     }
   ]
 }

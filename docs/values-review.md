@@ -3169,6 +3169,108 @@ characterization is nowhere claimed.
    "good enough" in-file; a Lean-aware scanner is not worth its weight while
    the catch rate is this good (1 for 1 on first run).
 
+## 2026-08-27 — corpus 368 — the bracket is conditional, and the route that was dropped
+
+`PointwiseBracket.condExp_band_second_moment` closes the rung part 1 opened:
+`μ[(M_b − M_a)² | 𝓕_a] =ᵐ μ[⟨M⟩_b − ⟨M⟩_a | 𝓕_a]` for `M = φ●B` on `[0,T]` and `a ≤ b ≤ T`, with
+the bracket increment `bracketRep`, the ω-wise `∫_a^b φ_u(ω)² du` of the `Lp` class's own
+predictable representative. One corpus entry, `sc-bracket-conditional` (`full`); 367 → 368.
+
+Reviewed by this session against the eight lenses; no multi-agent panel was run (agents were out
+of scope for the session), so the judgment below is single-reviewer and should be read as such.
+
+### The standing first pass — prose against statement
+
+Five places said the conditional form "stays unclaimed": `docs/coverage.md`, `docs/leaps.md`
+(prose and the landmark table), `docs/mathematical-architecture.md`, and `docs/bridges.md`'s
+`CHAIN` row. Each was true when written and is false now; each was rewritten to point at the
+theorem rather than deleted, so the record of what was open *when* still reads correctly.
+
+The module docstring needed more than an update. Its `## Route` section described the pair
+identity / density / ε-extension as settled design — for a proof that now does not exist. Prose
+describing an unwritten proof is the same failure in a different tense, so the section was
+replaced by the route actually taken, and by an honest account of what the landed part-1 material
+is now *for*.
+
+Checked in the understating direction too (the 2026-08-17 lesson): the theorem's right-hand side
+is `μ[bracketRep | 𝓕_a]`, a conditional expectation, and every description says exactly that. It
+is not a weakening of the textbook statement — classically the bracket increment is
+`𝓕_b`-measurable and the conditional expectation is the assertion — but the *reason* differs here
+(this file does not prove `bracketRep` adapted at all), and `formalization_scope` records that
+difference rather than letting the shared shape hide it.
+
+### Upgrades executed
+
+* **The route was replaced, not implemented** (architectural ingenuity, first principles,
+  beautiful math). The design of record was polarise → generators → density → ε, roughly 800
+  lines, of which about 200 were already written. It was dropped on a two-line observation: a
+  conditional-expectation identity *is* an identity of `𝓕_a`-set integrals, and on such a set
+  `𝟙_F` is a bounded `𝓕_a`-measurable factor — so `itoIntegralCLM_T_smulAdapted`, the locality
+  lemma built for the *first* moment, folds it back inside one Itô integral, and `𝟙_F² = 𝟙_F`
+  makes the square free. Both sides then meet at `∫_{(a,b]×F} φ²`, one by the isometry and one by
+  Tonelli. About 200 lines, and the proof states the reason rather than grinding it out.
+* **Half-finished work was deleted rather than finished** (zero slop). `condExp_pair_overlap` —
+  nested and partial overlaps, three increment splits, four kernel applications — is not in the
+  tree. Nothing would have consumed it.
+* **The dropped route's landed half was kept *and given consumers*** rather than left orphaned:
+  `condExp_increment_sq_of_adapted` reaches a case the general theorem cannot (it asks only that
+  the coefficient be integrable against the increment, where feeding one through an `L²(trim_T)`
+  integrand requires it bounded), and `condExp_bandGen_second_moment` is the reading on the
+  integrands one can write down, consuming `eval_bandGen`.
+* **Each a.e. argument stays on its native side** (idiomatic register, concept clarity):
+  representatives are compared under `trim_T`, and ω-sections are taken only of one explicitly
+  written integrand (`bandSq`), never of an `Lp` class — so the Fubini-on-null-sets detour that
+  "for a.e. ω, for a.e. u" would have forced never appears.
+* **A duplicated computation was lifted in the cleanup pass**: the four-line indicator case
+  analysis and the restrict-intersect rewrite each appeared twice, and became `bandSq_section` and
+  `restrict_timeMeasure_T`.
+* **The one orphan was given a consumer rather than kept or deleted.** `bandGen_support` (the
+  generator vanishes before its left endpoint) was the dropped route's entry point and had no
+  reader. It is exactly the hypothesis `ItoIntegralLocality`'s time-locality consumes, so adding
+  its mirror `bandGen_support_after` pins the elementary integral as a *process*: `0` up to `c`
+  (`itoProcessCLM_bandGen_eq_zero`) and the explicit `Z·(B_d − B_c)` from `d` on
+  (`itoProcessCLM_bandGen_eq_increment`). That in turn let `condExp_bandGen_second_moment` be
+  restated on the *increment* `M_b − M_a` rather than on the terminal integral, so its left-hand
+  side is now literally `condExp_band_second_moment`'s — which is what makes it a witness that the
+  abstract identity says the classical thing here, rather than a differently-shaped sibling. It
+  stays an *independent* derivation, because the step that would make it a corollary — evaluating
+  `bracketRep` on this integrand as `Z²·(d−c)` — is not formalised; that gap is stated in the
+  docstring and is backlog item 3.
+
+### Concerns recorded, not resolved
+
+* The gradient on lens 8 that this round does *not* move: `bracketRep` is an integral of a chosen
+  representative, and "bracket" is still a name for it. What would earn the name in full is the
+  partition-limit identification; that is backlog item 2, and until it lands the honest reading is
+  "the conditional second moment is the expected `∫φ²`", not "`⟨M⟩` is the quadratic variation".
+
+### Ranked backlog
+
+| rank | item | owner |
+|---|---|---|
+| 1 | The **adapted** bracket process: `t ↦ ∫₀ᵗ φ_s² ds` progressively measurable, so the increment is `𝓕_b`-measurable and `M² − ⟨M⟩` can be stated as a martingale | unassigned |
+| 2 | **Pathwise quadratic variation**: identify `bracketRep` with a limit of sums along partitions — what would make "bracket" mean `[M]` rather than `∫φ²` | unassigned |
+| 3 | Evaluate `bracketRep` on a band generator (`= Z²·(d−c)`), which turns `condExp_bandGen_second_moment` from an independent witness into a corollary — needs the trim→product→ω-section a.e. transfer | unassigned |
+| 4 | #199 — collapse `simpleAssembly_T` (carried) | unassigned |
+| 5 | Regenerate `docs/blueprint.md` (carried) | next session |
+| 6 | #194 — drift term in the Itô-process price | unassigned |
+| 7 | Lift `lpNorm_sq_eq_lintegral_enorm_sq` to `LpMulIsometry` when a second consumer appears (carried) | unassigned |
+
+### Evidence/context
+
+Mechanical floor: `lake build MathFin` (9000 jobs) + `lake lint` green in-container with the
+daemon down; `pytest` 50/50; `axiom_audit_gen --write` at 328 guards and byte-stable;
+`formalization_yaml --write` regenerated; ledger 368/368 fresh; no `sorry`. One new curated
+`AxiomAudit` pin (`PointwiseBracket.condExp_band_second_moment`).
+
+Process note worth carrying: the daemon was the wrong tool for this file. At ~600 lines of measure
+theory it walks the REPL into its 6 GB cap, and a check that should take minutes takes ten and then
+dies and silently retries; the same file builds in 4–15 s under `lake build` with the daemon down.
+The iteration loop for the second half of this session was `lake build` + `lake lint`, which is
+also the gate that counts (`autoImplicit false`, where the daemon has it true — two identifier
+errors in this work were invisible to the daemon and hard errors in the build). Recorded in
+`docs/patterns.md`.
+
 ## 2026-08-25 — corpus 367 — the pointwise bracket rung, part 1: conditional kernels and band generators
 
 New Foundations depth, no corpus growth: `Foundations/PointwiseBracket` starts the rung above

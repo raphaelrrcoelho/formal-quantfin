@@ -1209,4 +1209,26 @@ module's `## Source` section for the full credit line. -/
 #guard_msgs (whitespace := lax) in
 #print axioms MathFin.Contracts.value_cappedCall
 
+/-! ### The bracket is conditional (2026-08-27)
+
+`MathFin/Foundations/PointwiseBracket.lean` closes the rung above `norm_sq_increment_eq_bracket`:
+for `M = φ●B` on `[0,T]` and `a ≤ b ≤ T`, `μ[(M_b − M_a)² | 𝓕_a] =ᵐ μ[⟨M⟩_b − ⟨M⟩_a | 𝓕_a]`, with
+the bracket increment the *pathwise* `∫_a^b φ_u(ω)² du` (`bracketRep`) rather than the bracket
+*measure*, which weights time-and-sample by `φ²` and so integrates `ω` out.
+
+The identity is the Itô isometry localised. A conditional-expectation identity between integrable
+variables is an identity of `𝓕_a`-set integrals; on such a set `𝟙_F` is a bounded
+`𝓕_a`-measurable factor, so `itoIntegralCLM_T_smulAdapted` — the `𝓕_a`-linearity built for the
+*first* moment — folds it back inside one Itô integral, of `𝟙_F·𝟙_{(a,b]}·φ`, and squaring costs
+nothing because `𝟙_F² = 𝟙_F`. Tonelli through the trim takes the other side to the same rectangle
+integral `∫_{(a,b]×F} φ²`. No density argument and no ε-extension.
+
+Not claimed, and stated wherever the claim is: `bracketRep` is not asserted adapted, so the
+bracket is delivered through its increments' conditional expectations rather than as an adapted
+increasing process; and no pathwise quadratic variation is constructed. -/
+
+/-- info: 'MathFin.PointwiseBracket.condExp_band_second_moment' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms MathFin.PointwiseBracket.condExp_band_second_moment
+
 end MathFin.AxiomAudit

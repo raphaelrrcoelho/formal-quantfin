@@ -26,20 +26,46 @@ Report `reduced_core` and `placeholder` separately. **Spec-with-axiomatized-conc
 
 ## Current Audit
 
-> **Live status (2026-08-24):** corpus
-> **367**, **336 full + 18 wrappers = 354/367 delivery-ready**, 13 reduced cores, 0 placeholders.
-> Ledger 367 fresh / 0 stale / 0 missing; `lake build MathFin` and `lake lint` green, `pytest`
-> 50/50, `AxiomAuditGen` at 327 guards (231 curated). The **bracket second moment** below is the
-> newest round; the **contracts tower**, the **Itô chain rule**, and its coherence pass follow.
+> **Live status (2026-08-27):** corpus
+> **368**, **337 full + 18 wrappers = 355/368 delivery-ready**, 13 reduced cores, 0 placeholders.
+> Ledger 368 fresh / 0 stale / 0 missing; `lake build MathFin` and `lake lint` green, `pytest`
+> 50/50, `AxiomAuditGen` at 328 guards (232 curated). The **conditional bracket** below is the
+> newest round; the unconditional one, the **contracts tower**, the **Itô chain rule**, and its
+> coherence pass follow.
+>
+> **2026-08-27 — the bracket is conditional (367 → 368).**
+> `PointwiseBracket.condExp_band_second_moment` proves
+> `𝔼[(M_b − M_a)² | 𝓕_a] =ᵐ 𝔼[⟨M⟩_b − ⟨M⟩_a | 𝓕_a]` for `M = φ●B` on `[0,T]` and `a ≤ b ≤ T`,
+> the refinement the 2026-08-24 entry below left open. The bracket increment is `bracketRep`,
+> the ω-wise `∫_a^b φ_u(ω)² du` of the class's own predictable representative — nonnegative,
+> band-additive (`bracketRep_add`), monotone. Corpus entry `sc-bracket-conditional`.
+>
+> **What it does not claim, stated where the claim is made.** `bracketRep` is **not** asserted
+> adapted: predictability of the representative does not give progressive measurability at this
+> pin, so the bracket is delivered through its increments' *conditional expectations*, not as an
+> adapted increasing process — which is also why the right-hand side is `𝔼[⟨M⟩_b − ⟨M⟩_a | 𝓕_a]`
+> rather than `⟨M⟩_b − ⟨M⟩_a` (that is the classical statement, the increment being
+> `𝓕_b`-measurable). No pathwise quadratic variation is constructed: nothing in the file takes a
+> limit of sums along partitions.
+>
+> **The route, because it replaced the planned one.** The design of record (2026-08-25, part 1)
+> was pair identity → density of the post-`a` generators → ε-extension, roughly 800 lines. It was
+> dropped: the identity *is* the Itô isometry localised. A conditional-expectation identity is an
+> identity of `𝓕_a`-set integrals; on such a set `𝟙_F` is a bounded `𝓕_a`-measurable factor, so
+> `itoIntegralCLM_T_smulAdapted` folds it back inside the integral, `𝟙_F² = 𝟙_F` costs nothing,
+> and both set-integrals meet at `∫_{(a,b]×F} φ² d trim_T` — one side by the isometry, the other
+> by Tonelli through the trim. About 200 lines, no density argument and no ε. The band generators
+> and conditional Brownian kernels from part 1 stay: they state the classical facts the general
+> theorem abstracts, and reach coefficients it cannot (integrable rather than bounded).
 >
 > **2026-08-24 — the bracket earns its name (#200; corpus unchanged at 367).**
 > `ItoIntegralAgainstMartingale.norm_sq_increment_eq_bracket` proves the unconditional second
 > moment `𝔼[(M_b − M_a)²] = ⟨M⟩((a,b] × Ω)` for `M = φ●B` — the defining property quadratic
 > variation is for, at the level of expectations, so the `d⟨M⟩ = φ²·trim_T` reading of
 > `bracketMeasure` is no longer only motivation. The conditional refinement
-> (`𝔼[(M_b−M_a)² | 𝓕_a] = 𝔼[⟨M⟩_b − ⟨M⟩_a | 𝓕_a]`) and any pathwise bracket stay unclaimed: the
-> bracket measure integrates `ω` out, so the conditional form needs a pointwise adapted bracket
-> process `t ↦ ∫₀ᵗ φ_s² ds` — the next rung on this seam. Supporting change:
+> (`𝔼[(M_b−M_a)² | 𝓕_a] = 𝔼[⟨M⟩_b − ⟨M⟩_a | 𝓕_a]`) was the next rung on this seam and landed
+> 2026-08-27 (entry above); an *adapted* bracket process, and any pathwise quadratic variation,
+> stay unclaimed. Supporting change:
 > `itoIntegralCLM_T_bandRestrict` (`∫ 𝟙_{(a,b]}·φ dB = M_b − M_a`) extracted from
 > `itoIntegralAgainst_elementary`, which now consumes it.
 >

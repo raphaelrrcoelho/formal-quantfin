@@ -103,8 +103,11 @@ against `M` is `itoIntegralAgainst_elementary`, the Riemann–Stieltjes agreemen
 Z·(M_b − M_a)` on a band. Since 2026-08-24 the bracket reading is earned, not just motivated:
 `norm_sq_increment_eq_bracket` proves the unconditional second moment
 `𝔼[(M_b − M_a)²] = ⟨M⟩((a,b] × Ω)` — the defining property quadratic variation is for, at the
-level of expectations (the conditional form and a pathwise bracket stay out; they need a pointwise
-adapted `⟨M⟩_t = ∫₀ᵗ φ_s² ds`). The finance consequence is that a hedge is a **holding in the price**
+level of expectations. Since 2026-08-27 the conditional form is there too:
+`PointwiseBracket.condExp_band_second_moment` proves
+`𝔼[(M_b − M_a)² | 𝓕_a] =ᵐ 𝔼[⟨M⟩_b − ⟨M⟩_a | 𝓕_a]` against the *pathwise* increment
+`∫_a^b φ_u(ω)² du`, by localising the isometry on an `𝓕_a`-set rather than by a second density
+argument (what stays out is adaptedness of that increment, and any pathwise quadratic variation). The finance consequence is that a hedge is a **holding in the price**
 (`MarketCompletenessInPrice.exists_replicating_strategy_in_price`, needing only `σ ≠ 0` a.e. — the
 weighted norm rescales, so no uniform lower bound), and that the gains-neutrality hypothesis becomes a
 theorem: `PricingMeasureL2Density.measure_eq_of_density` derives `PricesGainsAtZero` from `S` being a

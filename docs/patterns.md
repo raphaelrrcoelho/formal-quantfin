@@ -1580,3 +1580,99 @@ docker run --rm --entrypoint cat <image> /app/lean-toolchain
 
 — against `cat lean-toolchain`. One second, and it turns a silent mid-session environment change
 into an immediate, legible mismatch.
+
+
+## The conditional refinement is the unconditional one, localised (2026-08-27 batch)
+
+### A conditional identity is a set-integral identity — localise, do not extend
+
+Both sides of `μ[(M_b − M_a)² | 𝓕_a] = μ[∫_a^b φ² du | 𝓕_a]` are **quadratic** in the integrand,
+so the reflex is: polarise into a bilinear form, prove it on generators, extend along a density.
+That was the recorded design, and it was about 800 lines.
+
+The reflex is wrong whenever the operator has an **`𝓕_a`-linearity lemma**. Unfold the conditional
+expectation into what it is — agreement of `∫_F · dμ` over `F ∈ 𝓕_a` — and the indicator `𝟙_F`
+becomes a *bounded `𝓕_a`-measurable factor*, exactly what such a lemma consumes:
+
+```lean
+-- 𝟙_F·(M_b − M_a) is not "a product"; it is again a single Itô integral
+itoIntegralCLM_T_smulAdapted … : ⇑(J (smulAdapted T a hBmeas 𝟙_F … (bandRestrict T a b φ)))
+                                   =ᵐ[μ] fun ω ↦ 𝟙_F ω * ⇑(J (bandRestrict T a b φ)) ω
+```
+
+and then `𝟙_F² = 𝟙_F` means the *square* costs nothing either: `∫_F (M_b − M_a)² dμ` is the
+squared `L²`-norm of one integrand, which the isometry evaluates. About 200 lines, no density
+argument, no ε — and the proof states the reason the theorem is true instead of grinding it out.
+
+**The test for the pattern.** Does the library already prove `T(Z·φ) = Z·T(φ)` for bounded
+`𝓕_a`-measurable `Z`? If yes, every unconditional statement about `‖T φ‖` has a conditional
+refinement for free, and the density argument that built `T` never has to be re-run.
+
+### Tonelli through a trim: keep each a.e. argument on its native side
+
+`trimMeasure_T` is `(ρ ⊗ μ).trim` onto the predictable σ-algebra, and its `Lp` classes carry an
+honest `StronglyMeasurable[predictable]` representative (`Lp.stronglyMeasurable`), so
+`integral_trim` crosses to the product measure for free and `integral_prod` +
+`integral_integral_swap` finish. That much is mechanical; the trap is ω-**sections**.
+
+An a.e. equality of `Lp` representatives is a statement about the *trim* measure. It does not
+directly give "for a.e. ω, for a.e. u", and manufacturing that costs a Fubini-on-null-sets detour.
+Avoid needing it: write **one** explicit integrand and take *its* sections, which are computed
+rather than a.e. —
+
+```lean
+private noncomputable def bandSq … : ℝ≥0 × Ω → ℝ :=
+  (Set.Ioc a b ×ˢ F).indicator fun z ↦ ((φ : ℝ≥0 × Ω → ℝ) z) ^ 2
+```
+
+— and do every representative swap on the trim side. The two set-integral computations then meet
+at a *rectangle integral*, `∫_{(a,b]×F} φ² d trim_T`, not at an ω-wise statement, and no lemma in
+the file ever needs the sections of an `Lp` class.
+
+### `Integrable.integral_prod_left` keeps the LEFT variable — and its `prod_*_ae` sibling reads the other way
+
+Worth pinning, because guessing costs a full daemon round trip. For `f : α × β → E` and
+`hf : Integrable f (μ.prod ν)`:
+
+| lemma | conclusion | suffix names |
+|---|---|---|
+| `hf.integral_prod_left` | `Integrable (fun x ↦ ∫ y, f (x,y) ∂ν) μ` | the variable that **survives** |
+| `hf.integral_prod_right` | `Integrable (fun y ↦ ∫ x, f (x,y) ∂μ) ν` | the variable that **survives** |
+| `hf.prod_right_ae` | `∀ᵐ x ∂μ, Integrable (fun y ↦ f (x,y)) ν` | the variable **integrated over** |
+
+So `integral_prod_*` and `prod_*_ae` name opposite things and cannot be read by one rule. To get
+"for a.e. ω (the *right* variable), the section in `u` is integrable", the route is
+`hf.swap.prod_right_ae`, with `Integrable.swap : Integrable f (μ.prod ν) → Integrable (f ∘ Prod.swap) (ν.prod μ)`.
+
+### `bot_le` rewrites to `⊥`, not to `0`
+
+In `ℝ≥0`, `max_eq_left bot_le` elaborates fine and then fails at the rewrite: its pattern is
+`max ?a ⊥`, and the goal says `max a 0`. `⊥` and `0` are defeq here but they are different
+constants, and `rw` matches syntactically. Pin the statement instead:
+
+```lean
+max_eq_left (show (0 : ℝ≥0) ≤ a from bot_le)
+```
+
+Same family: `Set.Ioc_disjoint_Ioc_consecutive` does not exist at this pin and
+`integral_union` is now `setIntegral_union`. Both are two-second fixes that cost a round trip each
+if batched with real errors — worth a `loogle`/`exact?` probe in the same pass that writes them.
+
+### The daemon is memory-bound before it is time-bound
+
+`docker/docker-compose.yml` caps `lean-repl` at `mem_limit 6g`, and a Mathlib-loaded REPL sits
+around 4.3 GB before it elaborates anything. Checking a 600-line measure-theory file repeatedly
+walks it into the cap: the symptom is not an error but a check that takes 10+ minutes at 40 % CPU
+and then "Lean REPL died … respawning" in the logs, after which the backend silently retries on a
+fresh REPL — paying the ~5 min olean load again, invisibly, so the *client* just sees one very slow
+check. `docker stats --no-stream docker-lean-repl-1` separates "still elaborating" from "thrashing
+at the cap" in one second; above ~5.5 GiB the next check is better spent after a restart.
+
+**And measure the alternative before assuming the daemon wins.** Same file, same session:
+10+ minutes in the memory-bound daemon, **15 seconds** under `lake build MathFin` in a fresh
+`verify` container with the daemon down — the Lake replay of ~9000 unchanged modules costs a few
+minutes and the changed leaf then elaborates unencumbered. The daemon's advantage is real but it is
+*per-iteration latency on a warm, un-thrashed REPL*; once the REPL is near its cap, the canonical
+build is both faster and the gate that actually counts (`lake build` has `autoImplicit false`, the
+daemon has it true — an undeclared variable is invisible in the daemon and a hard error in the
+build).
