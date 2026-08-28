@@ -2264,12 +2264,19 @@
       "input_hash": "69b9f19a4ba9f15cf19e81be9c68aa330d64aa85d865bd2ec7c49f591335dc0a",
       "verified_at_commit": "70acfe0"
     },
+    "sc-bracket-compensator": {
+      "benchmark_file": "stochastic_calculus.json",
+      "date": "2026-08-28",
+      "elapsed_s": 85.5,
+      "input_hash": "4e77c495ea85223e2271b427b08c55d3819d632fb5616fb907577f2d1405086d",
+      "verified_at_commit": "f645620"
+    },
     "sc-bracket-conditional": {
       "benchmark_file": "stochastic_calculus.json",
-      "date": "2026-08-27",
-      "elapsed_s": 111.6,
-      "input_hash": "314ddbcfe29f6646415a10d1de730be987cad9f2da53037231ad350d543aaa62",
-      "verified_at_commit": "0606b03"
+      "date": "2026-08-28",
+      "elapsed_s": 44.3,
+      "input_hash": "91038369af25ab66c3a86e0b363863b115dbcf0ef2740b45c1743ea80e75986b",
+      "verified_at_commit": "f645620"
     },
     "sc-bs-pde": {
       "benchmark_file": "stochastic_calculus.json",

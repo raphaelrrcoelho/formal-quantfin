@@ -107,7 +107,11 @@ level of expectations. Since 2026-08-27 the conditional form is there too:
 `PointwiseBracket.condExp_band_second_moment` proves
 `𝔼[(M_b − M_a)² | 𝓕_a] =ᵐ 𝔼[⟨M⟩_b − ⟨M⟩_a | 𝓕_a]` against the *pathwise* increment
 `∫_a^b φ_u(ω)² du`, by localising the isometry on an `𝓕_a`-set rather than by a second density
-argument (what stays out is adaptedness of that increment, and any pathwise quadratic variation). The finance consequence is that a hedge is a **holding in the price**
+argument. Since 2026-08-28 that increment is also **adapted**
+(`BracketCompensator.bracketProcess_adapted`, via the trace of the predictable σ-algebra on a
+band), which is what lets the identity rearrange into `𝔼[M_b² − ⟨M⟩_b | 𝓕_a] = M_a² − ⟨M⟩_a` —
+the bracket as the compensator of `M²`. What stays out is any pathwise quadratic variation, a
+bundled `Martingale` structure for `M² − ⟨M⟩`, and Doob–Meyer for a general submartingale. The finance consequence is that a hedge is a **holding in the price**
 (`MarketCompletenessInPrice.exists_replicating_strategy_in_price`, needing only `σ ≠ 0` a.e. — the
 weighted norm rescales, so no uniform lower bound), and that the gains-neutrality hypothesis becomes a
 theorem: `PricingMeasureL2Density.measure_eq_of_density` derives `PricesGainsAtZero` from `S` being a

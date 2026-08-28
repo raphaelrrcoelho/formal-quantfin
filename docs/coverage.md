@@ -26,12 +26,37 @@ Report `reduced_core` and `placeholder` separately. **Spec-with-axiomatized-conc
 
 ## Current Audit
 
-> **Live status (2026-08-27):** corpus
-> **368**, **337 full + 18 wrappers = 355/368 delivery-ready**, 13 reduced cores, 0 placeholders.
-> Ledger 368 fresh / 0 stale / 0 missing; `lake build MathFin` and `lake lint` green, `pytest`
-> 50/50, `AxiomAuditGen` at 328 guards (232 curated). The **conditional bracket** below is the
-> newest round; the unconditional one, the **contracts tower**, the **Itô chain rule**, and its
-> coherence pass follow.
+> **Live status (2026-08-28):** corpus
+> **369**, **338 full + 18 wrappers = 356/369 delivery-ready**, 13 reduced cores, 0 placeholders.
+> Ledger 369 fresh / 0 stale / 0 missing; `lake build MathFin` and `lake lint` green, `pytest`
+> 50/50, `AxiomAuditGen` at 329 guards (234 curated). The **bracket compensator** below is the
+> newest round; the conditional bracket, the unconditional one, the **contracts tower**, the
+> **Itô chain rule**, and its coherence pass follow.
+>
+> **2026-08-28 — the bracket is adapted, and it compensates `M²` (368 → 369).**
+> `BracketCompensator.condExp_sq_sub_bracket` proves
+> `𝔼[M_b² − ⟨M⟩_b | 𝓕_a] =ᵐ M_a² − ⟨M⟩_a` for `M = φ●B` on `[0,T]` — the property that makes
+> `⟨M⟩` *the* compensator of `M²` rather than a formula with a suggestive name. Corpus entry
+> `sc-bracket-compensator`.
+>
+> **The blocker it had to clear.** The 2026-08-27 entry below explicitly declined to claim the
+> bracket adapted, because `⇑φ` is strongly measurable for the *predictable* σ-algebra, which
+> mixes every `𝓕_s`. What is true is a **trace** statement: intersected with a band `(a,b] × Ω`,
+> every predictable set is `Borel(ℝ≥0) ⊗ 𝓕_b`-measurable — on a generator `(c,d] × F` the *left*
+> endpoint decides, either `c ≤ b` and `F ∈ 𝓕_c ⊆ 𝓕_b`, or `c > b` and the intersection is empty.
+> Clamping the squared representative to the band makes it product-measurable at `b`; integrating
+> the time variable out leaves an honestly `𝓕_b`-measurable function of `ω`
+> (`measurable_bracketRep`, `bracketProcess_adapted`). With `⟨M⟩_a` adapted it splits off a
+> conditional expectation, and the conditional bracket identity rearranges into the compensator
+> statement.
+>
+> **Still not claimed.** No pathwise quadratic variation: nothing takes a limit of sums along
+> partitions, so `⟨M⟩` is `∫φ²`, not `[M]`. And no bundled `Martingale` structure for
+> `t ↦ M_t² − ⟨M⟩_t`: the `Lp`-valued `M` supplies only a.e. adaptedness, which `Martingale` does
+> not accept. This is also not Doob–Meyer — existence and uniqueness of a compensator for a
+> general submartingale is untouched. Also landed this round: `bracketRep_bandGen`, which
+> evaluates the pathwise bracket of a band generator as `Z²·(d−c)` and so retires the one
+> "true by inspection, not formalised" caveat the previous round shipped.
 >
 > **2026-08-27 — the bracket is conditional (367 → 368).**
 > `PointwiseBracket.condExp_band_second_moment` proves

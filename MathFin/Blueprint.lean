@@ -9,6 +9,7 @@ import MathFin.Foundations.QuadraticVariationL2
 import MathFin.Foundations.WienerIntegralL2
 import MathFin.Foundations.ItoIsometryAdapted
 import MathFin.Foundations.ItoIntegralCLM
+import MathFin.Foundations.BracketCompensator
 import MathFin.Foundations.ItoIntegralBrownian
 import MathFin.Foundations.DiscreteIto
 import MathFin.Foundations.ItoFormulaSquaredL2
@@ -298,3 +299,25 @@ attribute [blueprint "thm:markov-path-law" (title := "Markov path law (Ionescu�
   P(i_k,i_{k+1})$ is derived by induction through the comp-product recursion
   of the marginals (Saporito 1.1.2). -/)]
   MathFin.markovPathMeasure_cylinder
+
+attribute [blueprint "thm:conditional-bracket" (title := "The bracket is conditional")
+  (statement := /-- For the Itô integral process $M = \varphi\bullet B$ on $[0,T]$ and
+  $a \le b \le T$, the conditional second moment of an increment is the conditional
+  expectation of the pathwise bracket increment,
+  $\mathbb{E}[(M_b-M_a)^2 \mid \mathcal{F}_a] = \mathbb{E}[\langle M\rangle_b -
+  \langle M\rangle_a \mid \mathcal{F}_a]$, with $\langle M\rangle_b - \langle M\rangle_a
+  = \int_a^b \varphi_u(\omega)^2\,du$ taken $\omega$-wise. The proof is the Itô isometry
+  localised on an $\mathcal{F}_a$-set: $\mathbb{1}_F$ is a bounded $\mathcal{F}_a$-measurable
+  factor, so it folds back inside a single Itô integral and squaring it costs nothing. -/)]
+  MathFin.PointwiseBracket.condExp_band_second_moment
+
+attribute [blueprint "thm:bracket-compensator"
+  (title := "The bracket compensates the square")
+  (statement := /-- $M^2 - \langle M\rangle$ is a martingale:
+  $\mathbb{E}[M_b^2 - \langle M\rangle_b \mid \mathcal{F}_a] = M_a^2 - \langle M\rangle_a$
+  for $a \le b \le T$. Expanding $(M_b-M_a)^2$, the cross term collapses by the martingale
+  property of $M$, and the bracket increment splits off the conditional expectation because
+  $\langle M\rangle_a$ is adapted — which holds because the predictable $\sigma$-algebra,
+  traced onto a band $(a,b]\times\Omega$, is $\mathcal{B}(\mathbb{R}_{\ge 0})\otimes
+  \mathcal{F}_b$-measurable. -/)]
+  MathFin.BracketCompensator.condExp_sq_sub_bracket

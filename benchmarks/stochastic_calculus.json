@@ -716,6 +716,22 @@
         "formalization_status": "full",
         "formalization_scope": "Full formal proof. Re-export of MathFin.PointwiseBracket.condExp_band_second_moment. SCOPE, stated honestly. (1) The bracket is bracketRep, the omega-wise time-integral of the SQUARED REPRESENTATIVE of the Lp class phi; it is not a pathwise quadratic variation of M, and no limit of sums along a sequence of partitions is taken anywhere in the file. (2) bracketRep is NOT claimed adapted or progressively measurable -- predictability of the representative does not give that at this pin -- so this delivers the bracket through its increments' conditional expectations, not as an adapted increasing process. What IS proved about it is nonnegativity, band additivity and the monotonicity that follows (bracketRep_nonneg, bracketRep_add, bracketRep_mono). (3) M is an Ito integral against a Brownian motion on a bounded horizon [0,T], not a general continuous L^2 martingale. (4) The identity is between the two CONDITIONAL EXPECTATIONS, which is the classical statement: the bracket increment is 𝓕_b-measurable, not 𝓕_a-measurable, so no stronger form is available without adaptedness."
       }
+    },
+    {
+      "id": "sc-bracket-compensator",
+      "name": "The Bracket Compensates the Square: 𝔼[M_b² − ⟨M⟩_b | 𝓕_a] = M_a² − ⟨M⟩_a",
+      "description": "For M = φ●B on [0,T] and a ≤ b ≤ T, the conditional expectation of M_b² − ⟨M⟩_b given 𝓕_a is M_a² − ⟨M⟩_a, with ⟨M⟩_t the pathwise bracket ∫₀^{t∧T} φ_u(ω)² du. The same file proves that bracket adapted, which is what allows ⟨M⟩_a to be split off the conditional expectation; a bundled Martingale structure is not claimed, since the Lp-valued M supplies only a.e. adaptedness.",
+      "domain": "stochastic_calculus",
+      "code": {
+        "lean": "import MathFin.Foundations.BracketCompensator\n\nopen MeasureTheory ProbabilityTheory MathFin\nopen MathFin.ItoIntegralL2 MathFin.ItoIntegralCLM\nopen MathFin.ItoIntegralProcessGeneral MathFin.BracketCompensator\nopen scoped NNReal ENNReal\n\n/-- **The bracket compensates the square.** For `M = φ●B` on `[0,T]` and `a ≤ b ≤ T`,\n    `𝔼[M_b² − ⟨M⟩_b | 𝓕_a] =ᵐ M_a² − ⟨M⟩_a`, where `⟨M⟩_t(ω) = ∫₀^{t∧T} φ_u(ω)² du` is the\n    pathwise bracket — proved *adapted* in the same file, which is what lets `⟨M⟩_a` be split\n    off the conditional expectation. Re-export of\n    `MathFin.BracketCompensator.condExp_sq_sub_bracket`. -/\ntheorem bracket_compensates_the_square\n    {Ω : Type*} {mΩ : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ]\n    {B : ℝ≥0 → Ω → ℝ} (hB : IsPreBrownianReal B μ)\n    (hBmeas : ∀ t, Measurable (B t)) (T : ℝ≥0)\n    (φ : Lp ℝ 2 (trimMeasure_T (μ := μ) T hBmeas))\n    {a b : ℝ≥0} (hab : a ≤ b) (hbT : b ≤ T) :\n    (μ[fun ω ↦ (⇑(itoProcessCLM hB T b hBmeas φ) ω) ^ 2\n        - ∫ u in Set.Ioc (0 : ℝ≥0) (min b T), ((φ : ℝ≥0 × Ω → ℝ) (u, ω)) ^ 2 ∂timeMeasure\n        | natFiltration hBmeas a])\n      =ᵐ[μ] fun ω ↦ (⇑(itoProcessCLM hB T a hBmeas φ) ω) ^ 2\n        - ∫ u in Set.Ioc (0 : ℝ≥0) (min a T), ((φ : ℝ≥0 × Ω → ℝ) (u, ω)) ^ 2 ∂timeMeasure :=\n  MathFin.BracketCompensator.condExp_sq_sub_bracket (hB := hB) T hBmeas φ hab hbT\n"
+      },
+      "metadata": {
+        "chapter": 7,
+        "reference": "The bracket as compensator of the square (Karatzas-Shreve 1.5 / 3.2; Revuz-Yor IV.1)",
+        "difficulty": "advanced",
+        "formalization_status": "full",
+        "formalization_scope": "Full formal proof. Re-export of MathFin.BracketCompensator.condExp_sq_sub_bracket. SCOPE, stated honestly. (1) The bracket is bracketProcess, the omega-wise time-integral of the squared predictable representative of phi, clamped at the horizon; it is proved ADAPTED here (Adapted (natFiltration hBmeas) (bracketProcess ...)), a.e. nondecreasing and zero at 0 -- but it is still NOT identified with a pathwise quadratic variation, since no limit of sums along partitions is taken anywhere. (2) The conclusion is the conditional-expectation identity, not a bundled Martingale structure for t -> M_t^2 - bracket_t: M is an Lp-valued process and supplies only a.e. adaptedness, which Martingale does not accept (the same gap MarketCompletenessInPrice.pricePathCondExp works around elsewhere). (3) M is an Ito integral against a Brownian motion on a bounded horizon [0,T], not a general continuous L^2 martingale, so this is not the Doob-Meyer decomposition -- existence and uniqueness of a compensator for an arbitrary submartingale is not proved. (4) a <= b <= T."
+      }
     }
   ]
 }

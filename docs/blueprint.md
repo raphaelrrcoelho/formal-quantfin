@@ -56,10 +56,12 @@ graph TD
   margrabe["Margrabe exchange option"]:::proved
   quadraticVariation["Quadratic variation: ∑(ΔB)² → T in L²"]:::proved
   wienerIsometry["Wiener isometry (deterministic L²)"]:::proved
+  conditionalBracket["The bracket is conditional"]:::proved
   itoFormulaL2["Itô formula, L² (C³ bounded — Summit A)"]:::proved
   itoFormulaTdL2["Time-dependent Itô formula, L² (Summit A′)"]:::proved
   itoSquaredL2["Itô for x² in L²: ∑B·ΔB → ½(B_T²−B₀²−T)"]:::proved
   mertonDominance["Merton dominance: jump risk is never free"]:::proved
+  bracketCompensator["The bracket compensates the square"]:::proved
   itoIntegralBrownian["∫₀ᵀ B dB = ½(B_T² − B₀² − T)"]:::proved
   martingaleRepresentation["Martingale representation (terminal form)"]:::proved
   marketCompleteness["Completeness of the Brownian market"]:::proved
@@ -80,6 +82,8 @@ graph TD
   esscherTilt --> margrabe
   brownianMotion --> quadraticVariation
   brownianMotion --> wienerIsometry
+  brownianMotion --> conditionalBracket
+  itoIntegralClm --> conditionalBracket
   brownianMotion --> itoFormulaL2
   itoIntegralClm --> itoFormulaL2
   discreteIto --> itoFormulaL2
@@ -91,6 +95,9 @@ graph TD
   bsCall --> mertonDominance
   bsDelta --> mertonDominance
   bsIdentity --> mertonDominance
+  brownianMotion --> bracketCompensator
+  itoIntegralClm --> bracketCompensator
+  conditionalBracket --> bracketCompensator
   brownianMotion --> itoIntegralBrownian
   itoIntegralClm --> itoIntegralBrownian
   itoIsometryAdapted --> itoIntegralBrownian

@@ -8,7 +8,7 @@
 
   The curated, storied audit is MathFin/AxiomAudit.lean (headliners + dated
   narrative); THIS file is its machine-written closure over the benchmark
-  corpus (328 constants). Scope: proof-position MathFin names only —
+  corpus (329 constants). Scope: proof-position MathFin names only —
   statement-position defs are exercised by elaboration + the verification
   ledger, and library_wrapper entries cite upstream names.
 
@@ -19,6 +19,9 @@
 import MathFin
 
 namespace MathFin.AxiomAuditGen
+
+/-- info: 'MathFin.BracketCompensator.condExp_sq_sub_bracket' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in #print axioms MathFin.BracketCompensator.condExp_sq_sub_bracket
 
 /-- info: 'MathFin.Btheta_isQBrownianMotion' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in #print axioms MathFin.Btheta_isQBrownianMotion

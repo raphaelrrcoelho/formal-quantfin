@@ -1617,9 +1617,8 @@ pins the elementary integral as a *process* — `0` up to `c`, the explicit `Z·
 on — and that is what lets `condExp_bandGen_second_moment` be stated on the increment `M_b − M_a`,
 i.e. with literally the general theorem's left-hand side, and the classical `(d−c)·𝔼[Z²|𝓕_a]` on
 the right. It is the witness that the abstract identity says the classical thing on the one
-integrand whose Itô integral is written out. What is *not* formalised is the evaluation of
-`bracketRep` on that integrand (`Z²·(d−c)`, true by inspection of the representative), which is why
-the witness is an independent derivation rather than a corollary.
+integrand whose Itô integral is written out. What was *not* formalised in that phase is the
+evaluation of `bracketRep` on that integrand (`Z²·(d−c)`); the phase below closes it.
 
 **What stays open, stated in every artifact this phase touches.** `bracketRep` is **not** claimed
 adapted — predictability of the representative does not give progressive measurability at this pin
@@ -1633,3 +1632,66 @@ additivity, and the monotonicity that follows.
 
 Gates: `lake build MathFin` + `lake lint` green, `pytest` 50/50, ledger 368/368 fresh, one new
 curated axiom pin, no `sorry`.
+
+## phase: the backlog round — the bracket is adapted, and compensates `M²` (2026-08-28, corpus 368→369)
+
+Executed against the values-review backlog the previous phase left, in its own priority order.
+
+**Item 1 — the adapted bracket — landed, and it was a σ-algebra problem, not an analytic one.**
+The previous phase declined to claim `bracketRep` adapted, and stated why: `⇑φ` is strongly
+measurable for the *predictable* σ-algebra on `ℝ≥0 × Ω`, which mixes every `𝓕_s`, so nothing about
+it is `𝓕_b`-measurable on its own. What *is* true is a **trace** statement: intersected with a
+band `(a,b] × Ω`, every predictable set is `Borel(ℝ≥0) ⊗ 𝓕_b`-measurable, because on a generator
+`(c,d] × F` the **left** endpoint decides — either `c ≤ b`, and `F ∈ 𝓕_c ⊆ 𝓕_b`, or `c > b`, and
+the intersection is empty. That asymmetry is precisely what predictability buys.
+
+Two things made it short. The trace is itself a σ-algebra, so constructing it as one (`traceAlg`)
+turns the statement into `generateFrom_le` over the predictable generators — no induction over
+`MeasurableSet` anywhere. And clamping the squared representative to the band makes it
+product-measurable at `b`, after which `StronglyMeasurable.integral_prod_right'` integrates the
+time variable out and leaves an honestly `𝓕_b`-measurable function of `ω`
+(`measurable_bracketRep`, `bracketProcess_adapted`).
+
+**The crown that unlocks:** `condExp_sq_sub_bracket`, `𝔼[M_b² − ⟨M⟩_b | 𝓕_a] =ᵐ M_a² − ⟨M⟩_a` —
+`M² − ⟨M⟩` is a martingale, which is what makes `⟨M⟩` *the* compensator of `M²` rather than a
+formula with a suggestive name. Expand `(M_b − M_a)²`; the cross term collapses by pull-out and
+`itoIntegralProcessGen_isMartingale`; the first term is the previous phase's conditional bracket
+identity; and `⟨M⟩_b − ⟨M⟩_a` splits off the conditional expectation *only because* `⟨M⟩_a` is now
+adapted. Corpus entry `sc-bracket-compensator`.
+
+**Item 3 also landed:** `bracketRep_bandGen` evaluates the pathwise bracket of a band generator as
+`Z²·(d−c)`, via the trim → product → ω-section a.e. transfer, retiring the one "true by
+inspection, not formalised" caveat the previous phase shipped. **Item 5** (regenerate
+`docs/blueprint.md`) is done, with two new spine nodes: `thm:conditional-bracket` and
+`thm:bracket-compensator`.
+
+**Three items were assessed and deliberately not attempted, each for a stated reason.**
+
+* **Item 2 — pathwise quadratic variation** (identify `bracketRep` with a partition limit). This
+  is the piece that would make "bracket" mean `[M]` rather than `∫φ²`, and it is a genuine
+  multi-phase project: the repo has `BrownianQuadraticVariation` (Saporito 6.1.1) only in `L¹`
+  form for `B` itself, and lifting it to a general `L²` integrand needs an approximation argument
+  along partitions that nothing in the tower currently supplies. Attempting it inside a backlog
+  round would have produced a half-finished file, which is the failure mode the previous phase
+  spent its judgment avoiding.
+* **Item 4 — #199, collapse `simpleAssembly_T`.** A pure refactor whose dependency runs the wrong
+  way (`simpleAssemblyOfMeasure` lives *above* `simpleAssembly_T` and imports it), so it needs
+  definitions moved down a module and many consumers re-routed across the Itô tower's core. High
+  regression surface, no new theorem, and it should not ride along with proof work.
+* **Item 6 — #194, a drift term in the Itô-process price.** An additive new construction
+  (`S = S₀ + ∫b ds + (σ●B)` and `∫ψ dS := ∫ψ b ds + ∫ψ dM`) on a different seam from this one;
+  it belongs to the HJM axis, not the bracket axis.
+
+**Item 7** stays conditional by its own terms: `lpNorm_sq_eq_lintegral_enorm_sq` is to be lifted to
+`LpMulIsometry` *when a second consumer appears*, and this round did not create one.
+
+**What stays open on this seam, stated in every artifact it touches.** No pathwise quadratic
+variation. No bundled `Martingale` structure for `t ↦ M_t² − ⟨M⟩_t`: `M` is `Lp`-valued and
+supplies only a.e. adaptedness, the same gap `MarketCompletenessInPrice.pricePathCondExp` works
+around elsewhere, and closing it here would mean rebuilding `M` from `μ[· | 𝓕_t]` as that file
+does. And this is not Doob–Meyer: existence and uniqueness of a compensator for a general
+submartingale is untouched.
+
+Gates: `lake build MathFin` + `lake lint` green, `pytest` 50/50, ledger 369/369 fresh,
+`AxiomAuditGen` 329 guards, two new curated axiom pins, blueprint regenerated (35 nodes + 1 frontier), no
+`sorry`.

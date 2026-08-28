@@ -1676,3 +1676,98 @@ minutes and the changed leaf then elaborates unencumbered. The daemon's advantag
 build is both faster and the gate that actually counts (`lake build` has `autoImplicit false`, the
 daemon has it true — an undeclared variable is invisible in the daemon and a hard error in the
 build).
+
+
+## Predictable ⟹ adapted is a trace statement (2026-08-28 batch)
+
+### The obstruction to "predictable ⟹ adapted" is local, and dissolves when you localise
+
+`⇑φ` strongly measurable for the **predictable** σ-algebra says nothing about `𝓕_b`-measurability:
+predictable mixes every `𝓕_s`, `s` arbitrary. So `ω ↦ ∫_a^b φ(u,ω)² du` being `𝓕_b`-measurable
+looks like it needs progressive measurability, which a bare `Lp` representative does not have —
+and that is how it was recorded as a scope limit.
+
+It is not the obstruction. Make the statement **local** and it becomes a one-line case analysis on
+the generators:
+
+> intersected with the band `(a,b] × Ω`, every predictable set is `Borel(ℝ≥0) ⊗ 𝓕_b`-measurable.
+
+On a generator `(c,d] × F` with `F ∈ 𝓕_c`, the **left** endpoint decides: either `c ≤ b`, and
+`F ∈ 𝓕_c ⊆ 𝓕_b`; or `c > b`, and `(c,d] ∩ (a,b] = ∅`. (The `{0} × F₀` generator meets the band
+nowhere.) That asymmetry — the coefficient's index being the *left* endpoint — is exactly what
+predictability buys, and it is the whole reason a predictable integrand has an adapted time
+integral.
+
+Then: clamp the integrand to the band (an indicator), which is now product-measurable at `b`, and
+integrate the time variable out with `StronglyMeasurable.integral_prod_right'`.
+
+### A trace σ-algebra is a `MeasurableSpace` — build it, and `generateFrom_le` replaces induction
+
+The first draft proved the trace statement by `induction hS with | basic … | empty | compl | iUnion`
+over `MeasurableSet[generateFrom C]`, which did not elaborate (the hypothesis needs to be in
+`GenerateMeasurable` form, and the goal's σ-algebra kept being re-synthesised). The fix is to
+notice that the *conclusion* defines a σ-algebra:
+
+```lean
+@[reducible] private def traceAlg … : MeasurableSpace (ℝ≥0 × Ω) where
+  MeasurableSet' S := MeasurableSet[bandAlg …] (S ∩ band)
+  measurableSet_empty := by rw [Set.empty_inter]; exact @MeasurableSet.empty _ (bandAlg …)
+  measurableSet_compl S hS := by
+    rw [show Sᶜ ∩ band = band \ (S ∩ band) from …]; exact (measurableSet_band …).diff hS
+  measurableSet_iUnion f hf := by rw [Set.iUnion_inter]; exact MeasurableSet.iUnion hf
+```
+
+after which the statement is `predictable ≤ traceAlg`, i.e. `generateFrom_le` on the generators —
+the repo's existing idiom, and no induction anywhere. Mark it `@[reducible]` or Lean rejects a
+`def` of class type; mark it `noncomputable` if the σ-algebra mentions a noncomputable filtration.
+
+### Instance-implicit measurability lemmas *synthesize*; they do not unify
+
+Working at a non-ambient σ-algebra (here `𝓕 b` instead of `mΩ`) splits the measurability API in
+two, and the split is invisible until it errors:
+
+| shape | behaviour at a non-ambient instance |
+|---|---|
+| `MeasurableSet.empty`, `MeasurableSet.univ` | instance is **synthesized** from context → picks `mΩ`, fails. Write `@MeasurableSet.empty _ m`. |
+| `.diff`, `.compl`, `.iUnion`, `.prod`, `.union` | instance is **unified** from the argument → correct automatically. |
+
+Error to recognise: *"synthesized type class instance is not definitionally equal to expression
+inferred by typing rules, synthesized `mΩ`, inferred `↑(natFiltration hBmeas) b`"*.
+
+And `letI : MeasurableSpace Ω := m` is only usable where **no `μ`- or `mΩ`-typed term is in
+scope** — otherwise every mention of `μ` re-elaborates at the new instance and mismatches. Factor
+the one step that needs the swap into a standalone lemma over a bare type with a bare `m`:
+
+```lean
+private theorem measurable_integral_section {Ω' : Type*} (m : MeasurableSpace Ω')
+    (g : ℝ≥0 × Ω' → ℝ) (hg : Measurable[@Prod.instMeasurableSpace ℝ≥0 Ω' _ m] g) :
+    Measurable[m] fun ω ↦ ∫ u, g (u, ω) ∂timeMeasure := by
+  letI : MeasurableSpace Ω' := m
+  exact ((hg.comp measurable_swap).stronglyMeasurable.integral_prod_right').measurable
+```
+
+### `Adapted` here means `Measurable[𝓕 i]`; `StronglyAdapted` is the strong one
+
+With Degenne's package in scope, `Adapted 𝓕 u` unfolds to `∀ i, Measurable[𝓕 i] (u i)` and
+`StronglyAdapted` is the `StronglyMeasurable` variant (`DriftProcessPredictable` uses the latter).
+`exact h.stronglyMeasurable` against an `Adapted` goal fails with an expected type of
+`Measurable …`, which reads like a defeq problem and is not one.
+
+### A patch script that asserts on every replacement is a foot-gun
+
+`for old,new in reps: assert old in s; s = s.replace(...)` followed by one `open(p,'w')` at the end
+discards **all** replacements when any single pattern is stale — and the next build then re-reports
+the exact errors you just "fixed", which reads as the fix not working. Write the file regardless
+and report the misses:
+
+```python
+missed = []
+for old, new in reps:
+    if old in s: s = s.replace(old, new, 1)
+    else: missed.append(old[:60])
+open(p, 'w').write(s)
+print("MISSED:", missed or "none")
+```
+
+One stale pattern (a `·` bullet where the script expected spaces) cost a full build cycle before
+this was changed.

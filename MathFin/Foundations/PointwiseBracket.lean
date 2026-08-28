@@ -59,9 +59,9 @@ Beside the general identity the file states the classical facts it is the abstra
   `d` on (`itoProcessCLM_bandGen_eq_increment`, `eval_bandGen`). Composed with the kernels this
   gives `condExp_bandGen_second_moment`, which carries the general identity's own left-hand side
   on this integrand and the classical `(d−c)·μ[Z²|𝓕_a]` on the right — the witness that the
-  abstract statement says the classical thing here. That the two right-hand sides agree, i.e. that
-  `bracketRep` of this integrand is `Z²·(d−c)`, is true by inspection of the representative and is
-  not proved.
+  abstract statement says the classical thing here. `bracketRep_bandGen` closes the loop by
+  evaluating this integrand's pathwise bracket as `Z²·(d−c)`, so the two right-hand sides are the
+  same object and not merely the same by inspection.
 
 ## Honest scope
 
@@ -634,10 +634,9 @@ with `Z` bounded and `𝓕_c`-measurable, and a band `(a,b]` containing `(c,d]`.
 whose left-hand side is literally `condExp_band_second_moment`'s, on the one integrand whose Itô
 integral is written out — and whose right-hand side is the classical `(d−c)·μ[Z²|𝓕_a]`. The
 process ends supply the increment (`itoProcessCLM_bandGen_eq_zero`,
-`itoProcessCLM_bandGen_eq_increment`) and the kernels close it, so this is an independent
-derivation, not a corollary: the two right-hand sides agree because `bracketRep` of this integrand
-over `(a,b]` is `Z²·(d−c)`, which is true by inspection of the representative and is **not** proved
-here. -/
+`itoProcessCLM_bandGen_eq_increment`) and the kernels close it, so the derivation is independent
+of the general theorem — but the two statements are now the *same* statement, because
+`bracketRep_bandGen` evaluates this integrand's pathwise bracket over `(a,b]` as `Z²·(d−c)`. -/
 theorem condExp_bandGen_second_moment (hB : IsPreBrownianReal B μ) (T : ℝ≥0)
     (hBmeas : ∀ t, Measurable (B t)) (hprob : IsProbabilityMeasure μ)
     {a b c d : ℝ≥0} (hac : a ≤ c) (hcd : c ≤ d) (hdb : d ≤ b) (hbT : b ≤ T)

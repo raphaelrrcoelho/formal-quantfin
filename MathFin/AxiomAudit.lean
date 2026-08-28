@@ -1231,4 +1231,30 @@ increasing process; and no pathwise quadratic variation is constructed. -/
 #guard_msgs (whitespace := lax) in
 #print axioms MathFin.PointwiseBracket.condExp_band_second_moment
 
+/-! ### The bracket is adapted, and compensates `M²` (2026-08-28)
+
+`MathFin/Foundations/BracketCompensator.lean` supplies the adaptedness `PointwiseBracket`
+deliberately did not claim, and cashes it. `⇑φ` is strongly measurable for the *predictable*
+σ-algebra, which mixes all of `𝓕_s`; nothing about it is `𝓕_b`-measurable on its own. What is true
+is a **trace** statement: intersected with a band `(a,b] × Ω`, every predictable set is
+`Borel(ℝ≥0) ⊗ 𝓕_b`-measurable — on a generator `(c,d] × F` the *left* endpoint decides, either
+`c ≤ b` and `F ∈ 𝓕_c ⊆ 𝓕_b`, or `c > b` and the intersection is empty. Clamping the squared
+representative to the band therefore makes it product-measurable at `b`, and integrating the time
+variable out leaves an honestly `𝓕_b`-measurable function of `ω` (`measurable_bracketRep`,
+`bracketProcess_adapted`).
+
+With `⟨M⟩_a` adapted it may be split off a conditional expectation, and the conditional bracket
+identity rearranges into `μ[M_b² − ⟨M⟩_b | 𝓕_a] =ᵐ M_a² − ⟨M⟩_a` — the property that makes `⟨M⟩`
+*the* compensator of `M²` rather than a formula with a suggestive name. Still not claimed: any
+pathwise quadratic variation, and a bundled `Martingale` structure (the `Lp`-valued `M` supplies
+only a.e. adaptedness). -/
+
+/-- info: 'MathFin.BracketCompensator.bracketProcess_adapted' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms MathFin.BracketCompensator.bracketProcess_adapted
+
+/-- info: 'MathFin.BracketCompensator.condExp_sq_sub_bracket' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms MathFin.BracketCompensator.condExp_sq_sub_bracket
+
 end MathFin.AxiomAudit

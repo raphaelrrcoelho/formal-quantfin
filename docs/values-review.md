@@ -3169,6 +3169,90 @@ characterization is nowhere claimed.
    "good enough" in-file; a Lean-aware scanner is not worth its weight while
    the catch rate is this good (1 for 1 on first run).
 
+## 2026-08-28 — corpus 369 — the backlog round: the bracket is adapted, and compensates `M²`
+
+Executed against the previous round's ranked backlog, in its order. Items 1, 3 and 5 landed;
+items 2, 4 and 6 were assessed and deliberately not attempted, each with a stated reason
+(`docs/roadmap.md` carries the reasons); item 7 stays conditional by its own terms.
+
+Reviewed by this session against the eight lenses; single-reviewer, no agent panel.
+
+### The standing first pass — prose against statement
+
+The previous round's headline caveat was "`bracketRep` is **not** claimed adapted", written into
+five artifacts. It is now false, and each was rewritten to say what *is* still out — no pathwise
+quadratic variation, no bundled `Martingale` structure, no Doob–Meyer — rather than simply
+deleted. The dated records (the 2026-08-27 roadmap phase and this file's 2026-08-27 entry) were
+left as they were: they record what was open *then*, and editing them would make the history
+claim knowledge it did not have.
+
+Checked in the overstating direction on the new claims. `condExp_sq_sub_bracket` is the
+conditional-expectation identity, not `Martingale (fun t ω ↦ M_t ω ^ 2 − ⟨M⟩_t ω) 𝓕 μ` — the
+`Lp`-valued `M` supplies only a.e. adaptedness — so no artifact says "is a martingale" without the
+qualifier, and the corpus `name` states the identity rather than the slogan. `bracketProcess` *is*
+now `Adapted`, which is a genuine strengthening and is claimed as one; note that `Adapted` in this
+scope means `Measurable[𝓕 i]`, with `StronglyAdapted` the strongly-measurable variant — the
+statement proved is the measurable one.
+
+And in the understating direction: the previous round's `condExp_bandGen_second_moment` docstring
+said the two right-hand sides "agree by inspection … not proved here". `bracketRep_bandGen` now
+proves it, so that sentence became an understatement and was replaced.
+
+### Upgrades executed
+
+* **The blocker was re-derived rather than accepted** (first principles, architectural
+  ingenuity). "Predictability does not give progressive measurability at this pin" was recorded as
+  a scope decision; it is true as stated but it is not the obstruction. The obstruction dissolves
+  once the statement is made *local*: predictable sets traced onto a band `(a,b] × Ω` are
+  `Borel(ℝ≥0) ⊗ 𝓕_b`-measurable, because on a generator the **left** endpoint decides. A standing
+  scope note is a hypothesis about difficulty, and this round is the second in a row where
+  re-deriving one paid for itself.
+* **The trace is a σ-algebra, so no `MeasurableSet` induction was needed** (idiomatic register).
+  Constructing `traceAlg : MeasurableSpace (ℝ≥0 × Ω)` — the sets whose band-intersection is
+  measurable — turns the whole statement into `generateFrom_le` over the predictable generators,
+  which is the repo's existing idiom (`ItoIntegralL2Dense.itoOrthRect` reads the same way). The
+  first draft used `induction hS with | basic … | compl …` and did not elaborate.
+* **The instance-swapping step was factored out rather than worked around**
+  (`measurable_integral_section`, stated over a bare type with a bare `m`). `letI : MeasurableSpace
+  Ω := 𝓕 b` is unusable while any `μ`- or `mΩ`-typed term is in scope; isolating the one step that
+  needs it into a lemma with neither made it a two-line proof.
+* **The one caveat the previous round shipped was retired** (`bracketRep_bandGen`), so the witness
+  and the general theorem are now the same statement rather than the same shape.
+* **The blueprint spine grew by the two nodes this axis was missing**
+  (`thm:conditional-bracket`, `thm:bracket-compensator`); the graph is regenerated, not hand-drawn.
+
+### Concerns recorded, not resolved
+
+* The gradient on lens 8 is unchanged and now sharper: `⟨M⟩` is `∫φ²`, and calling it *the*
+  quadratic variation still requires the partition limit (backlog item 1 below). The compensator
+  identity makes the naming much more defensible — a compensator of `M²` is what `⟨M⟩` is *for* —
+  but it is not the same theorem as `[M] = ⟨M⟩`.
+* `M² − ⟨M⟩` cannot be packaged as `Martingale` while `M` is `Lp`-valued. The workaround exists in
+  the library (`MarketCompletenessInPrice.pricePathCondExp` rebuilds the process from `μ[· | 𝓕_t]`
+  to get pointwise adaptedness); applying it here is backlog item 2 and would make the slogan
+  literally true in Lean.
+
+### Ranked backlog
+
+| rank | item | owner |
+|---|---|---|
+| 1 | **Pathwise quadratic variation**: identify `bracketProcess` with a limit of sums along partitions — what would make "bracket" mean `[M]` rather than `∫φ²`. Multi-phase: needs an approximation argument along partitions for a general `L²` integrand, which the tower does not yet supply | unassigned |
+| 2 | Package `M² − ⟨M⟩` as a bundled `Martingale` by rebuilding `M` from `μ[· \| 𝓕_t]`, as `pricePathCondExp` does — turns the identity into the slogan | unassigned |
+| 3 | #199 — collapse `simpleAssembly_T` (carried; assessed this round as a high-regression pure refactor that should not ride with proof work) | unassigned |
+| 4 | #194 — drift term in the Itô-process price (carried; belongs to the HJM seam) | unassigned |
+| 5 | Lift `lpNorm_sq_eq_lintegral_enorm_sq` to `LpMulIsometry` when a second consumer appears (carried) | unassigned |
+
+### Evidence/context
+
+Mechanical floor: `lake build MathFin MathFin.Blueprint blueprint_export` (9013 jobs) + `lake lint`
+green in-container with the daemon down; `pytest` 50/50; `axiom_audit_gen --write` at 329 guards
+and byte-stable; `formalization_yaml --write` regenerated; blueprint regenerated from
+`blueprint_export` (35 nodes + 1 declared frontier); ledger 369/369 fresh; no `sorry`. Two new curated `AxiomAudit` pins
+(`bracketProcess_adapted`, `condExp_sq_sub_bracket`).
+
+Process note carried forward: every Lean iteration this round ran as `lake build <module>` with the
+daemon down — 3–4 s per cycle for a leaf module against 10+ minutes in the memory-bound daemon.
+
 ## 2026-08-27 — corpus 368 — the bracket is conditional, and the route that was dropped
 
 `PointwiseBracket.condExp_band_second_moment` closes the rung part 1 opened:
