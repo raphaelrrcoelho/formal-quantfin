@@ -125,6 +125,26 @@ Some imported BrownianMotion modules have existing `sorry` warnings; the
 reported dependency sets show those gaps are not dependencies of these four
 theorems. This is an axiom audit, not a new full-proof-closure kernel replay.
 
+The native default `lake build` completed successfully (9,178 jobs), including
+both axiom-audit modules and otherwise unimported library leaves. The two
+intentional `sorry` declarations in the repository's pre-existing Comparator
+`Challenge.lean` are statement placeholders, not dependencies of these results.
+
+The two benchmark re-export statements were then checked with the ledger's
+native execution mode, at proof commit `e986c38`:
+
+```sh
+LEDGER_EXEC_LOCAL=1 python -m tools.verify.ledger verify --exec
+python -m tools.verify.ledger status
+python -m pytest tests/ -q
+```
+
+Results: two new entries verified, zero failures; 371 fresh ledger entries,
+zero stale or missing; 49 tests passed and one skipped. Python tests used an
+isolated native virtual environment. `formalization.yaml` and the generated
+axiom audit also passed their freshness checks. These local checks do not
+claim a fresh-runner CI result.
+
 Ported from Robert Martin's
 [`AmericanPutConvexity`](https://github.com/robertmartin8/AmericanPutConvexity/tree/9b2b208520341a63b64eef43c1ecb3c5708a8e63)
 development (Apache-2.0), with the manuscript *Log-convexity of the exercise

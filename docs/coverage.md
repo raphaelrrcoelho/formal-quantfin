@@ -40,14 +40,15 @@ for the model, proof, and source provenance.
 | `mf-american-put-log-boundary-convex` | `log(B(τ)/K)` is convex in positive time-to-expiry | `MathFin/BlackScholes/AmericanPut/Stopping/PhysicalBoundaryConvexity.lean`, `MathFin.BlackScholes.AmericanPut.Stopping.brownianUsualLogBoundary_convexOn` | `full` |
 | `mf-american-put-stock-boundary-strict-convex` | `B(τ)` is strictly convex in positive time-to-expiry | Same module, `MathFin.BlackScholes.AmericanPut.Stopping.brownianUsualStockBoundary_strictConvexOn` | `full` |
 
-These statuses describe mathematical scope, not a substitute for build
-evidence: the generated `AxiomAuditGen.lean` and fresh verification-ledger
-rows must cover both entries before the port is called verified. No `C²`
+The native default `lake build` passed, including `AxiomAuditGen.lean` and
+the curated audit. Both new benchmark statements passed native verification;
+the ledger reports 371 fresh, 0 stale, and 0 missing entries. These checks
+support the formal statements, not independent mathematical peer review. No `C²`
 boundary regularity, classical curvature, strict log-convexity, or `q > r`
 result is claimed by these entries. The dated baseline below records the
 prior corpus audit, not a verification of this addition.
 
-> **Live status (2026-08-28):** corpus
+> **Prior audit (2026-08-28):** corpus
 > **369**, **338 full + 18 wrappers = 356/369 delivery-ready**, 13 reduced cores, 0 placeholders.
 > Ledger 369 fresh / 0 stale / 0 missing; `lake build MathFin` and `lake lint` green, `pytest`
 > 50/50, `AxiomAuditGen` at 329 guards (234 curated). The **bracket compensator** below is the
