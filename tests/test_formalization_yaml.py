@@ -52,6 +52,27 @@ def test_report_matches_corpus():
     assert any("labs-leanstral-1-5" in m.get("models", []) for m in methods)
 
 
+def test_alignment_source_overrides_are_unique_and_legacy_fallback_is_preserved(tmp_path):
+    (tmp_path / "benchmarks").mkdir()
+
+    def write(name, sources):
+        entries = [{"id": f"{name}-{i}", "domain": "mathematical_finance",
+                    "metadata": {"formalization_status": "full", **source}}
+                   for i, source in enumerate(sources)]
+        (tmp_path / "benchmarks" / f"{name}.json").write_text(
+            json.dumps({"theorems": entries}), encoding="utf-8")
+
+    write("explicit", [{"alignment_source": "Source B"},
+                       {"alignment_source": "Source A"},
+                       {"alignment_source": "Source B"}])
+    write("legacy", [{}, {"alignment_source": "  "}])
+    rows = {row["module"]: row for row in
+            F.build_doc(str(tmp_path))["alignment"]["statements"]}
+    assert rows["benchmarks/explicit.json"]["source"] == "Source A; Source B"
+    assert rows["benchmarks/legacy.json"]["source"] == (
+        "mathematical_finance (Saporito, Stochastic Processes)")
+
+
 def _machine_note(doc):
     for m in doc["automation"]["methods"]:
         if "labs-leanstral-1-5" in m.get("models", []):

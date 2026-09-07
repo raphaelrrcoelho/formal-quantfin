@@ -1257,4 +1257,22 @@ only a.e. adaptedness). -/
 #guard_msgs (whitespace := lax) in
 #print axioms MathFin.BracketCompensator.condExp_sq_sub_bracket
 
+/-! ## American put option exercise-boundary geometry -/
+
+/-- info: 'MathFin.BlackScholes.AmericanPut.Stopping.brownianUsualLogBoundary_convexOn' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms MathFin.BlackScholes.AmericanPut.Stopping.brownianUsualLogBoundary_convexOn
+
+/-- info: 'MathFin.BlackScholes.AmericanPut.Stopping.brownianUsualStockBoundary_strictConvexOn' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms MathFin.BlackScholes.AmericanPut.Stopping.brownianUsualStockBoundary_strictConvexOn
+
+/-- info: 'MathFin.BlackScholes.AmericanPut.Stopping.aeAmericanPutValue_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms MathFin.BlackScholes.AmericanPut.Stopping.aeAmericanPutValue_eq
+
+/-- info: 'MathFin.BlackScholes.AmericanPut.Stopping.aeExerciseThreshold_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms MathFin.BlackScholes.AmericanPut.Stopping.aeExerciseThreshold_eq
+
 end MathFin.AxiomAudit

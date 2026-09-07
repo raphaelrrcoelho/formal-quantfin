@@ -96,6 +96,60 @@ Entries from 2026-06-29 (corpus 302, the whole-repo review below) onward use the
 PASS / PASS-WITH-NOTES verdicts, kept as-is — the transition itself was an upgrade to lens 4 (the review
 should *generate work*, not certify "OK").
 
+## 2026-09-06 — corpus 371 — American put option boundary geometry (#175)
+
+Three review agents split the eight lenses: proof architecture and upstream
+coherence (1, 2, 4), statement semantics and contribution metadata (5, 7),
+and proof presentation and register (3, 6, 8). This was a source review, not
+an independent replay of the source project's kernel audit. The authoring
+agent adjudicated the findings and handled all native Lean checks serially.
+
+### Exemplars and executed upgrades
+
+- **Inspired mathematics / beautiful mathematics:** the straight-line pricing
+  comparison and three-point maximum argument derive the interval property;
+  it is not supplied as an assumption. The documentation now explains that
+  mechanism before pointing readers to the geometric conclusion.
+- **Upstream coherence / first principles:** rewards use MathFin's explicit
+  GBM and the actual stopping-time supremum on the constructed completed
+  Brownian space. Added `AEHorizonValue` to the port and curated axiom guards
+  for its two equivalences, so the relation between pointwise and almost-sure
+  horizon bounds is available to consumers rather than left implicit.
+- **Architecture:** preserved the stopping-definition, normalization,
+  comparison, interval, and geometric layers. Deliberately excluded the
+  separate classical-regularity development from this contribution.
+- **Zero slop / idiomatic register:** all 173 ported proof bodies match the
+  pinned source after namespace, module, and comment normalization. Fixed a
+  generated `## Result` label that accidentally named prose as a declaration;
+  curated the result maps of the six principal entry-point modules. Adopted
+  MathFin's public-module convention without changing mathematical proofs.
+- **Concept clarity:** benchmark statements name the concrete stopping
+  boundary and the exact five scalar parameter inequalities. Documentation
+  distinguishes geometric convexity from classical curvature and does not
+  claim universality over arbitrary Brownian probability-space representations.
+  Fixed the YAML generator's default textbook attribution for this new source
+  using explicit `metadata.alignment_source`, with a regression test preserving
+  the legacy fallback for existing entries.
+
+### Ranked follow-up upgrades
+
+1. **Named usual-filtration Brownian certificate** (probability API follow-up):
+   expose the existing process and conditional-transition facts through the
+   upstream Brownian-motion predicate for the completed usual filtration.
+   This would make semantic inspection easier; the review did not identify
+   a mathematical defect in the current route.
+2. **Reusable analytic core** (architecture follow-up): extract general
+   parabolic three-point and rectangle lemmas from the financial namespace
+   where they would serve independent applications.
+3. **Broader API curation** (documentation follow-up): replace remaining
+   mechanically selected module-result lists with intentional public API maps.
+   The main semantic dependency spine is documented already.
+
+Verification results for the port are recorded in
+[`american-put-boundary.md`](american-put-boundary.md) and the generated
+verification ledger; the source project's historical audit is not counted
+as a new full-proof-closure replay for this port.
+
 ## 2026-08-07 — corpus 351 — martingale representation on the Brownian filtration, and continuous-time completeness
 
 Scope: the nine-task program behind `Foundations/{BrownianCylinderGeneration, ItoIntegralLocality,

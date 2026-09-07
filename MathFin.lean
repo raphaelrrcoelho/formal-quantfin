@@ -480,3 +480,7 @@ import MathFin.Contracts.Adapted
 import MathFin.Contracts.Pricing
 import MathFin.Contracts.BlackScholes
 import MathFin.Contracts.CappedCall
+
+-- Continuous-time American put option exercise-boundary geometry
+import MathFin.BlackScholes.AmericanPut.Stopping.PhysicalBoundaryConvexity
+import MathFin.BlackScholes.AmericanPut.Stopping.AEHorizonValue
