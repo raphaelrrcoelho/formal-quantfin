@@ -493,6 +493,20 @@
       "input_hash": "2796de57cfd7cf5480a43adbd2bb0c99a3f01e652a3db7668ccc782ad4fbb5d1",
       "verified_at_commit": "70acfe0"
     },
+    "mf-american-put-log-boundary-convex": {
+      "benchmark_file": "american_put_boundary.json",
+      "date": "2026-09-08",
+      "elapsed_s": 150.9,
+      "input_hash": "27022f5b495dd536ff8d5e4e3fd0a11da037096f95b8a4ee011509d8332750d6",
+      "verified_at_commit": "5dc826d"
+    },
+    "mf-american-put-stock-boundary-strict-convex": {
+      "benchmark_file": "american_put_boundary.json",
+      "date": "2026-09-08",
+      "elapsed_s": 87.4,
+      "input_hash": "859708cacc95b2384ddb5a1fbc891beeb8b245538324ac7c664c08172dc6e909",
+      "verified_at_commit": "5dc826d"
+    },
     "mf-american-supermartingale": {
       "benchmark_file": "mathematical_finance.json",
       "date": "2026-08-20",
@@ -1573,10 +1587,10 @@
     },
     "mf-glosten-milgrom-spread-positive": {
       "benchmark_file": "mathematical_finance.json",
-      "date": "2026-09-01",
-      "elapsed_s": 4.9,
-      "input_hash": "a947e2a936881c47c13d72d0bfbe99fd497556f240532203b16eba3e115fe496",
-      "verified_at_commit": "1f9d665"
+      "date": "2026-09-08",
+      "elapsed_s": 47.8,
+      "input_hash": "ebb142952daef23c04a8eda11d5a5f8e03adce23895157b2a3acf291412c58e2",
+      "verified_at_commit": "5dc826d"
     },
     "mf-gompertz-cumulative-force": {
       "benchmark_file": "mathematical_finance.json",

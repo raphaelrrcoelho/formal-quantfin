@@ -487,3 +487,6 @@ import MathFin.Contracts.CappedCall
 -- spread, plus a six-point model witnessing that its hypotheses are satisfiable
 import MathFin.Execution.GlostenMilgrom
 import MathFin.Execution.GlostenMilgromModel
+-- Continuous-time American put option exercise-boundary geometry
+import MathFin.BlackScholes.AmericanPut.Stopping.PhysicalBoundaryConvexity
+import MathFin.BlackScholes.AmericanPut.Stopping.AEHorizonValue
