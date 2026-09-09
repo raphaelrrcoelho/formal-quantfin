@@ -144,7 +144,7 @@ theorem gmMeasure_isProbabilityMeasure {θ p : ℝ} (hnn : ∀ i, 0 ≤ gmWeight
 
 /-- **The model exists, so the theorem is not vacuous.** Every hypothesis of
 `spread_pos_of_model` is discharged by the six-point space, for *every*
-`0 < θ < 1` and `0 < π ≤ 1` — not merely at one lucky point. What is left is the
+`0 < θ < 1` and `0 < p ≤ 1` — not merely at one lucky point. What is left is the
 conclusion, with no measure-theoretic hypothesis in front of it: the ask strictly
 exceeds the bid. -/
 theorem spread_pos_witness {θ p VL VH : ℝ}

@@ -197,8 +197,9 @@ A breadth-and-depth library across eleven areas. Headlines per area (full per-th
 - **Market microstructure** — the Avellaneda–Stoikov market-making problem: the Riccati value function,
   its approximate-HJB solution, and the constant half-spread / linear-skew closed forms, single-asset
   and multi-asset (matrix Riccati by spectral reduction); and the **Glosten–Milgrom**
-  adverse-selection spread, where the quotes are Bayesian conditional expectations of the value
-  given the order's direction.
+  adverse-selection spread, derived from the trader mix, with the quotes posited as Bayesian
+  conditional expectations of the value given the order's direction rather than derived from a
+  competitive market maker's zero expected profit.
 - **Contract reification** — a payoff language (`Payoff`/`Contract` over a typed underlying index)
   separating *what an instrument pays* from *the model that prices it*, with evaluation proved
   measurable, and the reified European call, put, cash-or-nothing digital and capped call reduced to

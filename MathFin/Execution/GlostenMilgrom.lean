@@ -45,7 +45,7 @@ and the two endpoints fail for different reasons.
 With `p < 1` a degenerate prior leaves nothing to be adversely selected: both
 posteriors coincide, the spread is exactly `0`, and `ask - bid > 0` is false.
 
-With `p = 1` it is worse, and in two ways that are both machine-checked here.
+A degenerate prior with `p = 1` is worse, in two ways both machine-checked here.
 One of the two trade events becomes null, and `quote_eq_zero_of_null` shows what
 `cond` then returns: not a bad price but the zero measure, whose integral is `0`.
 And `spread_junk_at_corner` evaluates the closed form at `θ = 1, p = 1` — it
@@ -217,9 +217,12 @@ theorem spread_eq [IsFiniteMeasure μ] (B S H : Set Ω) (hH : MeasurableSet H)
 omit [IsProbabilityMeasure μ] in
 /-- **A null trade event does not give a bad quote — it gives no quote.**
 `cond` on a null set is the *zero measure*, so the "price" integrates to `0`
-whatever the asset is worth. This is why `p = 1` has to be excluded along with
-the degenerate priors: at that corner one of the two trade events is null, and
-the inequality can hold for a reason unrelated to adverse selection. -/
+whatever the asset is worth. This is what a degenerate prior can do to a quote:
+at `θ = 1, p = 1` every arriving trader buys, so `Bᶜ` is null and the "bid" is
+not a bad price but no price at all. `p = 1` alone is harmless and is *not*
+excluded — `spread_pos_of_model` derives `p ≤ 1` rather than assuming it, and at
+`p = 1` with `0 < θ < 1` both trade events still carry positive mass. It is the
+prior's endpoints that have to go. -/
 theorem quote_eq_zero_of_null (H B : Set Ω) (VL VH : ℝ) (hB : μ B = 0) :
     ∫ ω, payoff H VL VH ω ∂(μ[|B]) = 0 := by
   rw [cond_eq_zero_of_meas_eq_zero hB]; simp
@@ -289,6 +292,10 @@ theorem spread_pos {θ p VL VH : ℝ} (hθ0 : 0 < θ) (hθ1 : θ < 1) (hp0 : 0 <
 /-- `postSell 1 1 = 0/0`, which Lean evaluates to `0` rather than rejecting. -/
 theorem postSell_one_one : postSell 1 1 = 0 := by unfold postSell; norm_num
 
+/-- `postBuy 1 1 = 1`: after a buy the value is certainly high — which is true,
+and is exactly why the *difference* below is the whole value range. -/
+theorem postBuy_one_one : postBuy 1 1 = 1 := by unfold postBuy; norm_num
+
 /-- **The punchline.** At `θ = 1, p = 1` the closed form hands back the *entire
 value range* as the spread — the largest it could conceivably be — at exactly the
 point where the value is common knowledge and the true spread is `0`. Nothing
@@ -296,7 +303,7 @@ errors, nothing is flagged; `0/0 = 0` does it all. A `full` entry quantified ove
 `p ≤ 1` and unconstrained `θ` would carry this inside it. -/
 theorem spread_junk_at_corner (VL VH : ℝ) :
     (VH - VL) * (postBuy 1 1 - postSell 1 1) = VH - VL := by
-  unfold postBuy postSell; norm_num
+  rw [postSell_one_one, postBuy_one_one]; ring
 
 /-! ## Stage 4 — the seam -/
 
@@ -406,7 +413,7 @@ theorem postSell_eq (H B : Set Ω) (hB : MeasurableSet B) (hH : MeasurableSet H)
 
 /-- **Glosten–Milgrom: the spread is strictly positive.** The market maker's ask
 and bid are `∫ V ∂μ[|buy]` and `∫ V ∂μ[|sell]`, and the first strictly exceeds
-the second whenever `V_L < V_H`, `0 < π ≤ 1` **and `0 < θ < 1`**.
+the second whenever `V_L < V_H`, `0 < p ≤ 1` **and `0 < θ < 1`**.
 
 This is the issue's `## Acceptance criteria`, with the hypothesis it omits. The
 chain is: Stage 1 derives the trade probabilities from the trader mix; Stage 4

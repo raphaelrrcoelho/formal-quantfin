@@ -56,16 +56,20 @@ Report `reduced_core` and `placeholder` separately. **Spec-with-axiomatized-conc
 > true statements about unrelated objects. `toReal` sends `∞ ↦ 0` and `x/0 ↦ 0`, so every
 > conversion carries its `≠ ∞` side condition.
 >
-> **`0 < θ < 1` is a hypothesis the usual statement omits, and the endpoints fail two different
-> ways.** With `p < 1` a degenerate prior leaves nothing to be adversely selected: the posteriors
-> coincide, the spread is exactly `0`, and `ask − bid > 0` is false. With `p = 1` it is worse, in
-> two ways both machine-checked here: one trade event is null, and `quote_eq_zero_of_null` shows
-> `cond` then returns the *zero measure*, whose integral is `0` — not a bad price but no price;
-> and `spread_junk_at_corner` evaluates the closed form at `θ = 1, p = 1`, where it returns the
-> **entire** `V_H − V_L`, the largest spread there could be, at the one point where the true
-> spread is `0`, because `0/0 = 0`. Nothing errors in either case. The derivation demands the hypothesis independently: the two trade
-> probabilities need `μ H ≠ 0` and `μ Hᶜ ≠ 0`, so their hypotheses cannot be jointly satisfied
-> without it. Two further hypotheses proved unnecessary and were removed rather than shipped:
+> **`0 < θ < 1` is a hypothesis issue #107's acceptance criterion omits, and the prior's two
+> endpoints fail differently.** With `p < 1` a degenerate prior leaves nothing to be adversely
+> selected: the posteriors coincide, the spread is exactly `0`, and `ask − bid > 0` is false. A
+> degenerate prior with `p = 1` is worse, in two ways both machine-checked here: one trade event
+> is null, and `quote_eq_zero_of_null` shows `cond` then returns the *zero measure*, whose
+> integral is `0` — not a bad price but no price; and `spread_junk_at_corner` evaluates the closed
+> form at `θ = 1, p = 1`, where it returns the **entire** `V_H − V_L`, the largest spread there
+> could be, at the one point where the true spread is `0`, because `0/0 = 0`. Nothing errors in
+> either case. `p = 1` on its own is admitted, not excluded — `spread_pos_of_model` derives
+> `p ≤ 1` rather than assuming it, and at `p = 1` with `0 < θ < 1` both trade events still carry
+> positive mass. It is the prior's endpoints that go. The derivation demands the hypothesis
+> independently: the two trade probabilities need `μ H ≠ 0` and `μ Hᶜ ≠ 0`, so their hypotheses
+> cannot be jointly satisfied without it. Two further hypotheses proved unnecessary and were
+> removed rather than shipped:
 > `p ≤ 1` is forced by `μ (H ∩ I) ≤ μ H`, and `μ H ≠ 0` in `postSell_eq` is forced by the trade
 > probability itself.
 >

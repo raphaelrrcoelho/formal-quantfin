@@ -3169,6 +3169,92 @@ characterization is nowhere claimed.
    "good enough" in-file; a Lean-aware scanner is not worth its weight while
    the catch rate is this good (1 for 1 on first run).
 
+## 2026-09-08 — corpus 370 — the open-PR round: two outside contributions, one merged
+
+Scope: the two open pull requests, #211 (Glosten–Milgrom, oxarbitrage) and #212 (American put
+exercise-boundary log-convexity, robertmartin8). A three-agent panel with the eight lenses split
+three ways — 1/2/4, 5/7 + the standing prose-vs-statement first pass, and 3/6/8 — read both
+branches, and the maintainer adjudicated. #211 merged (corpus 369 → **370**) with the prose fixes
+below; #212 was not merged and carries a posted change request.
+
+**Standing first pass, and it fired on both.** #211's `quote_eq_zero_of_null` docstring asserted
+that `p = 1` "has to be excluded" — but `spread_pos_of_model` *derives* `p ≤ 1` and
+`spread_pos_witness` admits equality, and at `p = 1` with `0 < θ < 1` both trade events carry
+positive mass (`μ B = θ`). A docstring contradicting a theorem three declarations below it, in a
+file whose whole subject is a missing hypothesis. Fixed, along with the same ellipsis in the module
+header and the coverage entry. Its `description` also attributed the missing `0 < θ < 1` to "the
+usual statement of the result" — a claim about Glosten–Milgrom (1985) rather than about issue
+#107's checkbox — and carried neither of the two scope limits (the quotes are *posited* as
+conditional expectations, not derived from zero expected profit; the sell event is `Bᶜ`, so no
+no-trade outcome). `description` and `formalization_scope` are the only fields the HF export ships,
+so a limit that lives only in the PR body does not exist. Both now in `description`.
+
+The #212 finding is the sharper one and is recorded here because it generalises: the PR proves
+convexity on `0 ≤ q ≤ r`, and `docs/open-problems.md` Tier 1 §1 lists `0 < q < r` as **open**. The
+word "open" appears nowhere in anything the PR adds. Merging it would have left the repo asserting,
+in two published documents, both that the problem is open and that it is proved. **A contribution
+that resolves one of our own listed open problems has to say so, in the field that ships** — and
+the disclosure that matters there (ported, AI-assisted, unrefereed) lives in `metadata.provenance`,
+which the HF export drops.
+
+Per-lens, briefly.
+
+- **1 Inspired math.** *Exemplar:* #211's `spread_junk_at_corner` — it does not merely exclude the
+  bad corner, it machine-checks what the corner *returns*: the entire `V_H − V_L`, the largest
+  spread possible, at the one point where the true spread is `0`, because `0/0 = 0`. A missing
+  hypothesis turned from an assertion into evidence. *Upgrade:* #212's `LineIntervalConvexity` gets
+  convexity of `b` with no derivative of `b` at all — that argument should be lifted out of the
+  finance namespace.
+- **2 Coherence.** *Exemplar:* #211 consumes `cond_apply`, `cond_eq_inv_mul_cond_mul`,
+  `cond_add_cond_compl_eq`, `measure_inter_add_sdiff` and reinvents no Bayes; `cond_toReal_eq` is a
+  genuine type-crossing seam, not a wrapper — it needs no nonzero-denominator hypothesis because
+  both sides degenerate together. *Upgrade:* rebuild `gmMeasure` on `PMF.ofFintype`/`toMeasure`,
+  which supplies `IsProbabilityMeasure` as an instance and deletes three lemmas.
+- **3 Zero slop.** *Exemplar:* #211 derives `p ≤ 1` from `measure_mono (H ∩ I ⊆ H)` and `μ H ≠ 0` in
+  `postSell_eq` from the trade probability itself — two hypotheses dropped rather than shipped, the
+  one failure no gate here can see. *Upgrade:* `buy_denom_pos`/`sell_denom_pos` still take `0 < p`
+  where `0 ≤ p` suffices; only drop-and-reprove finds it.
+- **4 Architecture.** *Upgrade:* #211's `variable` block is fighting the file — `[IsProbabilityMeasure μ]`
+  is used by 5 of ~21 declarations and `omit`-ed 11 times, while `[IsFiniteMeasure μ]` is written
+  per-declaration. A `section` boundary does by construction what `omit` is doing by subtraction.
+- **5 First principles.** *Exemplar:* `GlostenMilgromModel.lean` — a six-point space discharging
+  every hypothesis of `spread_pos_of_model` **symbolically in `θ` and `p`**, not at one convenient
+  point, so `spread_pos_witness` states the conclusion with no measure-theoretic hypothesis in front
+  of it. This is the anti-vacuity doctrine executed by an outside contributor, and it is the bar.
+  *Counter-example, from #212:* `DividendPutSolution`, a 17-field `Prop`, is never shown inhabited
+  anywhere in that port, and ~30 modules of conditional results hang off it.
+- **6 Idiomatic register.** *Upgrade:* `(θ p : ℝ≥0∞)` should be implicit in #211 — the `_ _` at the
+  call sites is Lean saying so; `gmInf` reads as *infimum*.
+- **7 Concept clarity.** *Exemplar:* #211's four-stage header, which states the two modelling
+  conventions up front and explains what the additive `ℝ≥0∞` form buys ("it is the *proofs*, not the
+  statements"). *Upgrade:* the repo has no convention for a contribution that touches
+  `open-problems.md`; #212 showed we need one.
+- **8 Beautiful math.** *Exemplar:* `payoff = V_L + 1_H·(V_H − V_L)` — in the *difference* of two
+  conditional integrals the constant cancels and the scale factors out in one `ring`, leaving
+  exactly the belief movement. The economic content falls out of a definitional choice.
+
+### Ranked backlog
+
+1. **Decide the house rule for contributions that touch `docs/open-problems.md`** — what a
+   machine-checked-but-unrefereed resolution may claim in `description`, and how the register
+   records it. #212 is blocked on this and it will recur.
+2. **Export `metadata.provenance` in the HF dataset** (`tools/verify/hf_dataset.py`). The 2026-08-07
+   round published `formalization_scope` because shipping the claim while withholding the
+   disclosure is this repo's named failure. Provenance is now the disclosure that matters and it
+   does not ship.
+3. **#211 register follow-ups** — fix the `variable` block rather than `omit`-ing 11 times; make
+   `{θ p}` implicit; weaken `buy_denom_pos`/`sell_denom_pos` to `0 ≤ p`; restate the model
+   hypotheses in `ℝ` via `μ.real`, collapsing the six `gmMeasure_…` bridges and three twin proof
+   pairs; rename `gmInf`.
+4. **Give market microstructure one home** — `Foundations/{MarketMakingRiccati,
+   MatrixMarketMakingRiccati, AlmgrenChriss}` are the same theme as the new `Execution/`, and the
+   README already lists them in one bullet across two directories.
+5. **`docs/bridges.md` has no entry for the Foundations→`Execution/` seam**, and would have fallen
+   six entries behind had #212 landed. The catalogue is only useful if PRs update it.
+6. **Note for the next round:** CI runs `lake lint`, `lake build` does not. #212 was green natively
+   and red in CI on 172 missing definition docstrings plus one dead `[IsFiniteMeasure P]`. The
+   contributing guide should say `lake build && lake lint` in the checklist, not `lake build`.
+
 ## 2026-08-28 — corpus 369 — the backlog round: the bracket is adapted, and compensates `M²`
 
 Executed against the previous round's ranked backlog, in its order. Items 1, 3 and 5 landed;

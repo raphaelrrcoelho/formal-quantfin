@@ -1573,10 +1573,10 @@
     },
     "mf-glosten-milgrom-spread-positive": {
       "benchmark_file": "mathematical_finance.json",
-      "date": "2026-09-01",
-      "elapsed_s": 4.9,
-      "input_hash": "a947e2a936881c47c13d72d0bfbe99fd497556f240532203b16eba3e115fe496",
-      "verified_at_commit": "1f9d665"
+      "date": "2026-09-08",
+      "elapsed_s": 89.7,
+      "input_hash": "da83985636307772edd102814d6bd043020327ab8e5ff4d9ebd32f5086cefcdb",
+      "verified_at_commit": "243e521"
     },
     "mf-gompertz-cumulative-force": {
       "benchmark_file": "mathematical_finance.json",
