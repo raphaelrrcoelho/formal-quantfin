@@ -34,7 +34,7 @@ at one convenient point.
 
 ## Results
 
-* `gmMeasure`, `gmHigh`, `gmBuy`, `gmInf`: the space, and the three events.
+* `gmMeasure`, `gmHigh`, `gmBuy`, `gmInformed`: the space, and the three events.
 * `gm_buy_inter_inf`: an informed trader buys exactly when the value is high —
   on this space, a set identity.
 * `gmMeasure_univ_eq_one`: the six masses add to one.
@@ -63,7 +63,7 @@ def gmHigh : Set (Fin 6) := {0, 1, 2}
 /-- The arriving trader buys. -/
 def gmBuy : Set (Fin 6) := {0, 1, 4}
 /-- The arriving trader is informed. -/
-def gmInf : Set (Fin 6) := {0, 3}
+def gmInformed : Set (Fin 6) := {0, 3}
 
 /-- Every set's measure is the sum of the masses it contains. -/
 theorem gmMeasure_apply (θ p : ℝ) (s : Set (Fin 6)) :
@@ -107,35 +107,35 @@ theorem gmMeasure_high_compl_eq : gmMeasure θ p gmHighᶜ = ENNReal.ofReal (1 -
   simp [gmHigh, gmWeight, Fin.sum_univ_six]; ring
 
 theorem gmMeasure_high_inter_inf (hp0 : 0 ≤ p) :
-    gmMeasure θ p (gmHigh ∩ gmInf) = ENNReal.ofReal p * ENNReal.ofReal θ := by
+    gmMeasure θ p (gmHigh ∩ gmInformed) = ENNReal.ofReal p * ENNReal.ofReal θ := by
   rw [gmMeasure_eq_ofReal hnn, ← ENNReal.ofReal_mul hp0]; congr 1
-  simp [gmHigh, gmInf, gmWeight, Fin.sum_univ_six]; ring
+  simp [gmHigh, gmInformed, gmWeight, Fin.sum_univ_six]; ring
 
 theorem gmMeasure_low_inter_inf (hp0 : 0 ≤ p) :
-    gmMeasure θ p (gmHighᶜ ∩ gmInf) = ENNReal.ofReal p * ENNReal.ofReal (1 - θ) := by
+    gmMeasure θ p (gmHighᶜ ∩ gmInformed) = ENNReal.ofReal p * ENNReal.ofReal (1 - θ) := by
   rw [gmMeasure_eq_ofReal hnn, ← ENNReal.ofReal_mul hp0]; congr 1
-  simp [gmHigh, gmInf, gmWeight, Fin.sum_univ_six]; ring
+  simp [gmHigh, gmInformed, gmWeight, Fin.sum_univ_six]; ring
 
 theorem gmMeasure_uninformed_high :
-    2 * gmMeasure θ p ((gmHigh ∩ gmBuy) \ gmInf) = gmMeasure θ p (gmHigh \ gmInf) := by
+    2 * gmMeasure θ p ((gmHigh ∩ gmBuy) \ gmInformed) = gmMeasure θ p (gmHigh \ gmInformed) := by
   rw [gmMeasure_eq_ofReal hnn, gmMeasure_eq_ofReal hnn,
     show (2 : ℝ≥0∞) = ENNReal.ofReal 2 by simp, ← ENNReal.ofReal_mul (by norm_num)]
   congr 1
-  simp [gmHigh, gmBuy, gmInf, gmWeight, Fin.sum_univ_six]; ring
+  simp [gmHigh, gmBuy, gmInformed, gmWeight, Fin.sum_univ_six]; ring
 
 theorem gmMeasure_uninformed_low :
-    2 * gmMeasure θ p ((gmHighᶜ ∩ gmBuy) \ gmInf) = gmMeasure θ p (gmHighᶜ \ gmInf) := by
+    2 * gmMeasure θ p ((gmHighᶜ ∩ gmBuy) \ gmInformed) = gmMeasure θ p (gmHighᶜ \ gmInformed) := by
   rw [gmMeasure_eq_ofReal hnn, gmMeasure_eq_ofReal hnn,
     show (2 : ℝ≥0∞) = ENNReal.ofReal 2 by simp, ← ENNReal.ofReal_mul (by norm_num)]
   congr 1
-  simp [gmHigh, gmBuy, gmInf, gmWeight, Fin.sum_univ_six]; ring
+  simp [gmHigh, gmBuy, gmInformed, gmWeight, Fin.sum_univ_six]; ring
 
 end Values
 
 /-- **An informed trader buys exactly when the value is high.** The one
 behavioural primitive, and on this space it is a set identity. -/
-theorem gm_buy_inter_inf : gmBuy ∩ gmInf = gmHigh ∩ gmInf := by
-  ext i; fin_cases i <;> simp [gmBuy, gmInf, gmHigh]
+theorem gm_buy_inter_inf : gmBuy ∩ gmInformed = gmHigh ∩ gmInformed := by
+  ext i; fin_cases i <;> simp [gmBuy, gmInformed, gmHigh]
 
 /-- The six masses add to one. -/
 theorem gmMeasure_isProbabilityMeasure {θ p : ℝ} (hnn : ∀ i, 0 ≤ gmWeight θ p i) :
@@ -153,7 +153,7 @@ theorem spread_pos_witness {θ p VL VH : ℝ}
       - (∫ ω, payoff gmHigh VL VH ω ∂((gmMeasure θ p)[|gmBuyᶜ])) := by
   have hnn := gmWeight_nonneg hθ0.le hθ1.le hp0.le hp1
   haveI := gmMeasure_isProbabilityMeasure hnn
-  exact spread_pos_of_model (gmMeasure θ p) gmHigh gmBuy gmInf
+  exact spread_pos_of_model (gmMeasure θ p) gmHigh gmBuy gmInformed
     MeasurableSet.of_discrete MeasurableSet.of_discrete MeasurableSet.of_discrete
     hθ0 hθ1 hp0 hV (gmMeasure_high_eq hnn) gm_buy_inter_inf
     (gmMeasure_high_inter_inf hnn hp0.le) (gmMeasure_low_inter_inf hnn hp0.le)

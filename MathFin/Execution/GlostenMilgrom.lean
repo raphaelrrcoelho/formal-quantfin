@@ -89,18 +89,16 @@ namespace MathFin.Execution
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 
-variable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+variable {Ω : Type*}
 
 /-! ## Stage 1 — the trade probabilities, derived from the trader mix -/
 
-omit [MeasurableSpace Ω] [IsProbabilityMeasure μ] in
 /-- **The informed half.** On the high-value event, every informed trader buys,
 so the buy-and-informed mass is exactly the informed mass. -/
 theorem inter_informed (H B I : Set Ω) (hbuy : B ∩ I = H ∩ I) :
     H ∩ B ∩ I = H ∩ I := by
   rw [Set.inter_assoc, hbuy, ← Set.inter_assoc, Set.inter_self]
 
-omit [MeasurableSpace Ω] [IsProbabilityMeasure μ] in
 /-- **The informed half, low value.** An informed trader facing a low value sells,
 so the buy-and-informed mass on `Hᶜ` is empty. Derived from the same primitive —
 no extra hypothesis. -/
@@ -108,10 +106,11 @@ theorem inter_informed_low (H B I : Set Ω) (hbuy : B ∩ I = H ∩ I) :
     Hᶜ ∩ B ∩ I = ∅ := by
   rw [Set.inter_assoc, hbuy, ← Set.inter_assoc, Set.compl_inter_self, Set.empty_inter]
 
-omit [IsProbabilityMeasure μ] in
+variable [MeasurableSpace Ω] (μ : Measure Ω)
+
 /-- **The trade probability, derived.** Doubling clears the uninformed `1/2`
 without ever subtracting: `2·μ(H ∩ B) = (1 + p)·θ`. -/
-theorem two_mul_inter_high_buy (H B I : Set Ω) (hI : MeasurableSet I) (θ p : ℝ≥0∞)
+theorem two_mul_inter_high_buy (H B I : Set Ω) (hI : MeasurableSet I) {θ p : ℝ≥0∞}
     (hbuy : B ∩ I = H ∩ I)
     (hindep : μ (H ∩ I) = p * θ)
     (hH : μ H = θ)
@@ -127,16 +126,15 @@ theorem two_mul_inter_high_buy (H B I : Set Ω) (hI : MeasurableSet I) (θ p : �
     _ = p * θ + θ := by rw [hsplitH, hindep, hH]
     _ = (1 + p) * θ := by rw [add_mul, one_mul, add_comm]
 
-omit [IsProbabilityMeasure μ] in
 /-- **`P(buy | V_H)`, subtraction- and division-free.** The additive form
 `2·P = 1 + p` is the one `ℝ≥0∞` actually likes. -/
 theorem two_mul_cond_buy_high (H B I : Set Ω) (hH' : MeasurableSet H) (hI : MeasurableSet I)
-    (θ p : ℝ≥0∞) (hθ0 : θ ≠ 0) (hθtop : θ ≠ ∞)
+    {θ p : ℝ≥0∞} (hθ0 : θ ≠ 0) (hθtop : θ ≠ ∞)
     (hbuy : B ∩ I = H ∩ I) (hindep : μ (H ∩ I) = p * θ) (hH : μ H = θ)
     (huninf : 2 * μ ((H ∩ B) \ I) = μ (H \ I)) :
     2 * μ[B | H] = 1 + p := by
   have h2 : 2 * μ (H ∩ B) = (1 + p) * θ :=
-    two_mul_inter_high_buy μ H B I hI θ p hbuy hindep hH huninf
+    two_mul_inter_high_buy μ H B I hI hbuy hindep hH huninf
   calc 2 * μ[B | H]
       = 2 * (θ⁻¹ * μ (H ∩ B)) := by rw [cond_apply hH', hH]
     _ = θ⁻¹ * (2 * μ (H ∩ B)) := by rw [mul_left_comm]
@@ -144,7 +142,6 @@ theorem two_mul_cond_buy_high (H B I : Set Ω) (hH' : MeasurableSet H) (hI : Mea
     _ = 1 + p := by
         rw [mul_comm (1 + p) θ, ← mul_assoc, ENNReal.inv_mul_cancel hθ0 hθtop, one_mul]
 
-omit [IsProbabilityMeasure μ] in
 /-- **`P(buy | V_L) = (1 − p)/2`, stated additively as `2·P + p = 1`** — because
 `1 - p` truncates in `ℝ≥0∞` and this form does not.
 
@@ -153,7 +150,7 @@ with `θ ≠ 0` from the high-value case, **the model itself forces `0 < θ < 1`
 exactly the hypothesis the issue is missing. It is not an extra condition imposed
 on the theorem; it is what the derivation needs in order to exist. -/
 theorem two_mul_cond_buy_low_add (H B I : Set Ω) (hHc : MeasurableSet Hᶜ)
-    (hI : MeasurableSet I) (θ' p : ℝ≥0∞) (hθ0 : θ' ≠ 0) (hθtop : θ' ≠ ∞)
+    (hI : MeasurableSet I) {θ' p : ℝ≥0∞} (hθ0 : θ' ≠ 0) (hθtop : θ' ≠ ∞)
     (hbuy : B ∩ I = H ∩ I)
     (hindep : μ (Hᶜ ∩ I) = p * θ')
     (hHc' : μ Hᶜ = θ')
@@ -194,7 +191,6 @@ theorem integral_payoff (ν : Measure Ω) [IsProbabilityMeasure ν] (H : Set Ω)
     integral_const, integral_indicator_const _ hH]
   simp [measureReal_def]
 
-omit [IsProbabilityMeasure μ] in
 /-- **The quote.** `E[V | E]` for a conditioning event of positive probability —
 this is `ask` when `E` is a buy and `bid` when `E` is a sell. -/
 theorem integral_payoff_cond [IsFiniteMeasure μ] (E H : Set Ω) (hH : MeasurableSet H)
@@ -203,7 +199,6 @@ theorem integral_payoff_cond [IsFiniteMeasure μ] (E H : Set Ω) (hH : Measurabl
   haveI : IsProbabilityMeasure (μ[|E]) := cond_isProbabilityMeasure hE0
   exact integral_payoff (μ[|E]) H hH VL VH
 
-omit [IsProbabilityMeasure μ] in
 /-- **The spread, reduced to the posteriors.** Every trace of the payoff cancels
 except the scale `V_H − V_L`; what is left is exactly how much a buy moves the
 belief relative to a sell. Adverse selection, and nothing else, sets the spread. -/
@@ -214,7 +209,6 @@ theorem spread_eq [IsFiniteMeasure μ] (B S H : Set Ω) (hH : MeasurableSet H)
   rw [integral_payoff_cond μ B H hH hB0 VL VH, integral_payoff_cond μ S H hH hS0 VL VH]
   ring
 
-omit [IsProbabilityMeasure μ] in
 /-- **A null trade event does not give a bad quote — it gives no quote.**
 `cond` on a null set is the *zero measure*, so the "price" integrates to `0`
 whatever the asset is worth. This is what a degenerate prior can do to a quote:
@@ -240,13 +234,19 @@ noncomputable def postSell (θ p : ℝ) : ℝ := (1 - p) * θ / (1 - p * (2 * θ
 because it equals `(1−p) + 2pθ`, two non-negative terms with the second strictly
 positive — which is the hint `nlinarith` is given, so no case split on the sign
 of `2θ−1` is needed. -/
-theorem buy_denom_pos {θ p : ℝ} (hθ0 : 0 < θ) (hp0 : 0 < p) (hp1 : p ≤ 1) :
-    0 < 1 + p * (2 * θ - 1) := by nlinarith [mul_pos hp0 hθ0]
+theorem buy_denom_pos {θ p : ℝ} (hθ0 : 0 < θ) (hp0 : 0 ≤ p) (hp1 : p ≤ 1) :
+    0 < 1 + p * (2 * θ - 1) := by
+  rcases hp1.lt_or_eq with h | h
+  · nlinarith [mul_nonneg hp0 hθ0.le]
+  · subst h; linarith
 
 /-- The sell denominator is positive — likewise *twice* `P(sell)` — by the mirror
 identity `1 − p(2θ−1) = (1−p) + 2p(1−θ)`. -/
-theorem sell_denom_pos {θ p : ℝ} (hθ1 : θ < 1) (hp0 : 0 < p) (hp1 : p ≤ 1) :
-    0 < 1 - p * (2 * θ - 1) := by nlinarith [mul_pos hp0 (sub_pos.mpr hθ1)]
+theorem sell_denom_pos {θ p : ℝ} (hθ1 : θ < 1) (hp0 : 0 ≤ p) (hp1 : p ≤ 1) :
+    0 < 1 - p * (2 * θ - 1) := by
+  rcases hp1.lt_or_eq with h | h
+  · nlinarith [mul_nonneg hp0 (sub_pos.mpr hθ1).le]
+  · subst h; linarith
 
 /-- **The closed form of the spread's belief term** — the formula the issue's
 `## Task` states, now derived:
@@ -258,8 +258,8 @@ theorem post_sub_post {θ p : ℝ} (hθ0 : 0 < θ) (hθ1 : θ < 1) (hp0 : 0 < p)
     (hp1 : p ≤ 1) :
     postBuy θ p - postSell θ p
       = 4 * p * θ * (1 - θ) / (1 - p ^ 2 * (2 * θ - 1) ^ 2) := by
-  have h1 := (buy_denom_pos hθ0 hp0 hp1).ne'
-  have h2 := (sell_denom_pos hθ1 hp0 hp1).ne'
+  have h1 := (buy_denom_pos hθ0 hp0.le hp1).ne'
+  have h2 := (sell_denom_pos hθ1 hp0.le hp1).ne'
   have h3 : (1 : ℝ) - p ^ 2 * (2 * θ - 1) ^ 2
       = (1 + p * (2 * θ - 1)) * (1 - p * (2 * θ - 1)) := by ring
   have hD : (1 : ℝ) - p ^ 2 * (2 * θ - 1) ^ 2 ≠ 0 := by rw [h3]; exact mul_ne_zero h1 h2
@@ -272,8 +272,8 @@ economic content: the order's direction is informative, so the two quotes cannot
 coincide. -/
 theorem postSell_lt_postBuy {θ p : ℝ} (hθ0 : 0 < θ) (hθ1 : θ < 1) (hp0 : 0 < p)
     (hp1 : p ≤ 1) : postSell θ p < postBuy θ p := by
-  have h1 := buy_denom_pos hθ0 hp0 hp1
-  have h2 := sell_denom_pos hθ1 hp0 hp1
+  have h1 := buy_denom_pos hθ0 hp0.le hp1
+  have h2 := sell_denom_pos hθ1 hp0.le hp1
   have hdiff : 0 < postBuy θ p - postSell θ p := by
     rw [post_sub_post hθ0 hθ1 hp0 hp1]
     apply div_pos
@@ -309,7 +309,7 @@ theorem spread_junk_at_corner (VL VH : ℝ) :
 
 /-- **The unconditional probability of `E`, in `ℝ`.** The law of total
 probability, converted once. -/
-theorem measure_toReal_of_likelihoods (E H : Set Ω) (hH : MeasurableSet H)
+theorem measure_toReal_of_likelihoods [IsProbabilityMeasure μ] (E H : Set Ω) (hH : MeasurableSet H)
     {a c t : ℝ} (ha : (μ[E | H]).toReal = a) (hc : (μ[E | Hᶜ]).toReal = c)
     (ht : (μ H).toReal = t) :
     (μ E).toReal = a * t + c * (1 - t) := by
@@ -330,7 +330,7 @@ This is what makes the stages one argument rather than three. Stage 2 hands back
 are the same number. No hypothesis that the denominator is nonzero is needed —
 in the degenerate case both sides are `0`, which is precisely the behaviour the
 issue's statement must not be allowed to hide. -/
-theorem cond_toReal_eq (E H : Set Ω) (hE : MeasurableSet E) (hH : MeasurableSet H)
+theorem cond_toReal_eq [IsProbabilityMeasure μ] (E H : Set Ω) (hE : MeasurableSet E) (hH : MeasurableSet H)
     {a c t : ℝ} (ha : (μ[E | H]).toReal = a) (hc : (μ[E | Hᶜ]).toReal = c)
     (ht : (μ H).toReal = t) :
     (μ[H | E]).toReal = a * t / (a * t + c * (1 - t)) := by
@@ -339,7 +339,6 @@ theorem cond_toReal_eq (E H : Set Ω) (hE : MeasurableSet E) (hH : MeasurableSet
     div_eq_inv_mul]
   ring
 
-omit [IsProbabilityMeasure μ] in
 /-- **The complementary likelihood.** `P(Eᶜ | F) = 1 − P(E | F)`, in `ℝ`, given
 that `F` is not null — the hypothesis the model already forces. -/
 theorem cond_compl_toReal [IsFiniteMeasure μ] (E F : Set Ω) (hE : MeasurableSet E)
@@ -348,7 +347,6 @@ theorem cond_compl_toReal [IsFiniteMeasure μ] (E F : Set Ω) (hE : MeasurableSe
   haveI : IsProbabilityMeasure (μ[|F]) := cond_isProbabilityMeasure hF0
   rw [← measureReal_def, probReal_compl_eq_one_sub hE, measureReal_def]
 
-omit [IsProbabilityMeasure μ] in
 /-- `P(buy | V_H) = (1+p)/2`, converted from Stage 1's additive form. -/
 theorem cond_buy_high_toReal (H B : Set Ω) {p : ℝ} (hp0 : 0 ≤ p)
     (hhigh : 2 * μ[B | H] = 1 + ENNReal.ofReal p) :
@@ -359,7 +357,6 @@ theorem cond_buy_high_toReal (H B : Set Ω) {p : ℝ} (hp0 : 0 ≤ p)
   simp only [ENNReal.toReal_ofNat, ENNReal.toReal_one] at h
   linarith
 
-omit [IsProbabilityMeasure μ] in
 /-- `P(buy | V_L) = (1−p)/2`, converted from Stage 1's additive form. -/
 theorem cond_buy_low_toReal (H B : Set Ω) {p : ℝ} (hp0 : 0 ≤ p)
     (hlow : 2 * μ[B | Hᶜ] + ENNReal.ofReal p = 1) :
@@ -374,7 +371,7 @@ theorem cond_buy_low_toReal (H B : Set Ω) {p : ℝ} (hp0 : 0 ≤ p)
 /-- **The posterior after a buy is exactly `postBuy`.** Stage 3's `postBuy` was a
 real function of two real numbers with no measure in sight; this is the theorem
 that makes it the model's posterior. -/
-theorem postBuy_eq (H B : Set Ω) (hB : MeasurableSet B) (hH : MeasurableSet H)
+theorem postBuy_eq [IsProbabilityMeasure μ] (H B : Set Ω) (hB : MeasurableSet B) (hH : MeasurableSet H)
     {θ p : ℝ} (hp0 : 0 ≤ p) (ht : (μ H).toReal = θ)
     (hhigh : 2 * μ[B | H] = 1 + ENNReal.ofReal p)
     (hlow : 2 * μ[B | Hᶜ] + ENNReal.ofReal p = 1) :
@@ -392,7 +389,7 @@ buy ones swapped, and the same seam lemma does the work.
 Only `μ Hᶜ ≠ 0` (that is, `θ ≠ 1`) is taken as a hypothesis. Its mirror
 `μ H ≠ 0` is *derived*: at a degenerate prior `cond` collapses to the zero
 measure, so `hhigh` would read `0 = 1 + p`. -/
-theorem postSell_eq (H B : Set Ω) (hB : MeasurableSet B) (hH : MeasurableSet H)
+theorem postSell_eq [IsProbabilityMeasure μ] (H B : Set Ω) (hB : MeasurableSet B) (hH : MeasurableSet H)
     {θ p : ℝ} (hp0 : 0 ≤ p) (ht : (μ H).toReal = θ) (hHc0 : μ Hᶜ ≠ 0)
     (hhigh : 2 * μ[B | H] = 1 + ENNReal.ofReal p)
     (hlow : 2 * μ[B | Hᶜ] + ENNReal.ofReal p = 1) :
@@ -419,7 +416,7 @@ This is the issue's `## Acceptance criteria`, with the hypothesis it omits. The
 chain is: Stage 1 derives the trade probabilities from the trader mix; Stage 4
 converts them and applies Bayes to get the posteriors; Stage 2 turns the quotes
 into those posteriors; Stage 3 supplies the strict inequality. -/
-theorem spread_pos_of_model (H B I : Set Ω)
+theorem spread_pos_of_model [IsProbabilityMeasure μ] (H B I : Set Ω)
     (hH : MeasurableSet H) (hB : MeasurableSet B) (hI : MeasurableSet I)
     {θ p VL VH : ℝ}
     (hθ0 : 0 < θ) (hθ1 : θ < 1) (hp0 : 0 < p) (hV : VL < VH)
@@ -446,10 +443,10 @@ theorem spread_pos_of_model (H B I : Set Ω)
   have hHc0 : μ Hᶜ ≠ 0 := by rw [hpriorc]; exact hoθc0
   -- Stage 1: the trade probabilities, derived from the trader mix
   have hhigh : 2 * μ[B | H] = 1 + ENNReal.ofReal p :=
-    two_mul_cond_buy_high μ H B I hH hI _ _ hoθ0
+    two_mul_cond_buy_high μ H B I hH hI hoθ0
       ENNReal.ofReal_ne_top hbuy hindepH hprior huninfH
   have hlow : 2 * μ[B | Hᶜ] + ENNReal.ofReal p = 1 :=
-    two_mul_cond_buy_low_add μ H B I hH.compl hI _ _ hoθc0
+    two_mul_cond_buy_low_add μ H B I hH.compl hI hoθc0
       ENNReal.ofReal_ne_top hbuy hindepHc hpriorc huninfHc
   -- both trade events have positive probability, so neither conditioning is vacuous
   have ha := cond_buy_high_toReal μ H B hp0.le hhigh
@@ -466,12 +463,12 @@ theorem spread_pos_of_model (H B I : Set Ω)
     intro h
     rw [h] at hBreal
     simp only [ENNReal.toReal_zero] at hBreal
-    linarith [buy_denom_pos hθ0 hp0 hp1]
+    linarith [buy_denom_pos hθ0 hp0.le hp1]
   have hBc0 : μ Bᶜ ≠ 0 := by
     intro h
     rw [h] at hBcreal
     simp only [ENNReal.toReal_zero] at hBcreal
-    linarith [sell_denom_pos hθ1 hp0 hp1]
+    linarith [sell_denom_pos hθ1 hp0.le hp1]
   -- Stage 2 reduces the quotes to the posteriors; Stage 4 names them; Stage 3 closes
   rw [spread_eq μ B Bᶜ H hH hB0 hBc0 VL VH,
     postBuy_eq μ H B hB hH hp0.le ht hhigh hlow,
