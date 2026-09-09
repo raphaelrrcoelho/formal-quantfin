@@ -1257,4 +1257,54 @@ only a.e. adaptedness). -/
 #guard_msgs (whitespace := lax) in
 #print axioms MathFin.BracketCompensator.condExp_sq_sub_bracket
 
+/-! ### Glosten-Milgrom adverse selection (2026-09-01)
+
+`MathFin/Execution/GlostenMilgrom.lean` derives the bid-ask spread from adverse selection
+alone. Five theorems are pinned, one per load-bearing claim.
+
+The **trade probabilities** are derived from the trader mix rather than assumed, which is what
+separates a `full` entry from a restatement. They are stated additively
+(`2 * μ[B | H] = 1 + p`) so that no step forms a difference in a type where subtraction
+truncates — the subtracting form follows from the additive one, so this buys the proofs, not
+the statements.
+
+`cond_toReal_eq` is the **seam**: Bayes pushed through `.toReal` once, generically, which is
+what identifies the model's posterior `μ[H | B]` with the real function `postBuy` the closed
+form is about. Without it the measure-theoretic half and the real-analysis half are true
+statements about unrelated objects. `toReal` sends `∞ ↦ 0` and `x/0 ↦ 0`, so this is exactly
+where a careless bridge would manufacture a silent wrong answer.
+
+`spread_pos_of_model` is the result itself, from the model's own primitives.
+
+`spread_junk_at_corner` is why the statement carries `0 < θ < 1`, which the issue's acceptance
+criterion omits: at `θ = 1, p = 1` the closed form returns the *entire* `V_H - V_L` as the
+spread — the largest there could be — at the one point where the value is common knowledge and
+the true spread is `0`. Nothing errors; `0/0 = 0` does it. Pinning it keeps that fact from
+quietly changing under the entry that depends on it.
+
+`spread_pos_witness` closes the vacuity question: a six-point space — value high or low, trader
+informed or not, uninformed trader tossing a coin — satisfies every hypothesis of
+`spread_pos_of_model`, symbolically in `θ` and `p`, so the result is not true for want of a
+model. -/
+
+/-- info: 'MathFin.Execution.two_mul_cond_buy_high' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms MathFin.Execution.two_mul_cond_buy_high
+
+/-- info: 'MathFin.Execution.cond_toReal_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms MathFin.Execution.cond_toReal_eq
+
+/-- info: 'MathFin.Execution.spread_pos_of_model' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms MathFin.Execution.spread_pos_of_model
+
+/-- info: 'MathFin.Execution.spread_junk_at_corner' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms MathFin.Execution.spread_junk_at_corner
+
+/-- info: 'MathFin.Execution.spread_pos_witness' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms MathFin.Execution.spread_pos_witness
+
 end MathFin.AxiomAudit

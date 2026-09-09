@@ -1571,6 +1571,13 @@
       "input_hash": "9bacc46bd752b79068558a29cae50b0a71ad59d5b5d1a6f5006f141e301fed43",
       "verified_at_commit": "70acfe0"
     },
+    "mf-glosten-milgrom-spread-positive": {
+      "benchmark_file": "mathematical_finance.json",
+      "date": "2026-09-01",
+      "elapsed_s": 4.9,
+      "input_hash": "a947e2a936881c47c13d72d0bfbe99fd497556f240532203b16eba3e115fe496",
+      "verified_at_commit": "1f9d665"
+    },
     "mf-gompertz-cumulative-force": {
       "benchmark_file": "mathematical_finance.json",
       "date": "2026-08-20",

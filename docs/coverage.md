@@ -26,12 +26,63 @@ Report `reduced_core` and `placeholder` separately. **Spec-with-axiomatized-conc
 
 ## Current Audit
 
-> **Live status (2026-08-28):** corpus
-> **369**, **338 full + 18 wrappers = 356/369 delivery-ready**, 13 reduced cores, 0 placeholders.
-> Ledger 369 fresh / 0 stale / 0 missing; `lake build MathFin` and `lake lint` green, `pytest`
-> 50/50, `AxiomAuditGen` at 329 guards (234 curated). The **bracket compensator** below is the
-> newest round; the conditional bracket, the unconditional one, the **contracts tower**, the
-> **Itô chain rule**, and its coherence pass follow.
+> **Live status (2026-09-01):** corpus
+> **370**, **339 full + 18 wrappers = 357/370 delivery-ready**, 13 reduced cores, 0 placeholders.
+> Ledger 370 fresh / 0 stale / 0 missing; `lake build MathFin` and `lake lint` green, `pytest`
+> 50/50, `AxiomAuditGen` at 330 guards (239 curated). The **Glosten–Milgrom spread** below is the
+> newest round; the bracket compensator, the conditional bracket, the unconditional one, the
+> **contracts tower**, the **Itô chain rule**, and its coherence pass follow.
+>
+> **2026-09-01 — adverse selection alone sets the spread (369 → 370).** A new section
+> `MathFin/Execution/` opens with Glosten–Milgrom (1985). `Execution.spread_pos_of_model` proves
+> `∫ V ∂μ[|buy] > ∫ V ∂μ[|sell]` from the trader mix — the informed event independent of the
+> value, an informed trader buying exactly when the value is high, an uninformed trader tossing a
+> coin. Corpus entry `mf-glosten-milgrom-spread-positive`.
+>
+> **The trade probabilities are derived, not posited.** `P(buy | V_H) = (1+p)/2` and
+> `P(buy | V_L) = (1−p)/2` follow from the four primitives — the prior, the informed event
+> independent of the value, informed traders trading on the value, uninformed traders tossing a
+> coin — which is what makes this `full` rather than a restatement. They are stated additively
+> (`2 · μ[B|H] = 1 + p`, `2 · μ[B|Hᶜ] + p = 1`) so that no step forms a difference in a type where
+> subtraction truncates; the textbook form does follow from the additive one, so this buys the
+> proofs, not the statements. The quotes are honest Bochner integrals: with the payoff written as
+> a constant plus an indicator, integrability is one line and the asset cancels, leaving
+> `(V_H − V_L)` times the gap between the posteriors.
+>
+> **The seam is the load-bearing part.** `cond_toReal_eq` is Bayes pushed through `.toReal` once
+> and generically; it is what identifies the model's `μ[H | B]` with the real function `postBuy`
+> the closed form is about, and the buy and sell sides are then the same lemma applied twice with
+> the likelihoods swapped. Without it the measure-theoretic half and the real-analysis half are
+> true statements about unrelated objects. `toReal` sends `∞ ↦ 0` and `x/0 ↦ 0`, so every
+> conversion carries its `≠ ∞` side condition.
+>
+> **`0 < θ < 1` is a hypothesis the usual statement omits, and the endpoints fail two different
+> ways.** With `p < 1` a degenerate prior leaves nothing to be adversely selected: the posteriors
+> coincide, the spread is exactly `0`, and `ask − bid > 0` is false. With `p = 1` it is worse, in
+> two ways both machine-checked here: one trade event is null, and `quote_eq_zero_of_null` shows
+> `cond` then returns the *zero measure*, whose integral is `0` — not a bad price but no price;
+> and `spread_junk_at_corner` evaluates the closed form at `θ = 1, p = 1`, where it returns the
+> **entire** `V_H − V_L`, the largest spread there could be, at the one point where the true
+> spread is `0`, because `0/0 = 0`. Nothing errors in either case. The derivation demands the hypothesis independently: the two trade
+> probabilities need `μ H ≠ 0` and `μ Hᶜ ≠ 0`, so their hypotheses cannot be jointly satisfied
+> without it. Two further hypotheses proved unnecessary and were removed rather than shipped:
+> `p ≤ 1` is forced by `μ (H ∩ I) ≤ μ H`, and `μ H ≠ 0` in `postSell_eq` is forced by the trade
+> probability itself.
+>
+> **The hypotheses are satisfiable, and that is a theorem.** A conjunction of measure-theoretic
+> constraints proves nothing if no model meets it — the same failure this round is about, one
+> level up. `MathFin/Execution/GlostenMilgromModel.lean` exhibits a six-point space (value high or
+> low × informed or not × the uninformed trader's coin) discharging every hypothesis, symbolically
+> in `θ` and `p`, so `spread_pos_witness` states the conclusion with no measure-theoretic
+> hypothesis in front of it.
+>
+> **Not claimed, and this is the important half.** The competitive market maker is *not*
+> formalized: `ask = E[V | buy]` and `bid = E[V | sell]` are posited by the shape of the
+> conclusion, and Glosten–Milgrom's derivation of them from zero expected profit under competition
+> is the assumed part. The sell event is modelled as `Bᶜ`, so there is no no-trade outcome — under
+> the standard extension that admits one, `E[V | Bᶜ]` is not the bid. Nothing dynamic: no sequence
+> of trades, no convergence of quotes to the true value. The model is two-valued and one-period,
+> as in the paper's opening section.
 >
 > **2026-08-28 — the bracket is adapted, and it compensates `M²` (368 → 369).**
 > `BracketCompensator.condExp_sq_sub_bracket` proves

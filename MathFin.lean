@@ -25,6 +25,8 @@
   * `RiskMeasures/`  — VaR/CVaR + coherent-risk axioms, Rockafellar-Uryasev,
                        spectral risk, Herfindahl concentration.
   * `Actuarial/`     — net premium, Gompertz force of mortality.
+  * `Execution/`     — Market microstructure and execution: Glosten-Milgrom
+                       adverse-selection spread.
   * `DeFi/`          — Decentralized-finance market microstructure:
                        constant-product AMMs (Uniswap v2-style), swap
                        output, invariant preservation, internal price.
@@ -480,3 +482,8 @@ import MathFin.Contracts.Adapted
 import MathFin.Contracts.Pricing
 import MathFin.Contracts.BlackScholes
 import MathFin.Contracts.CappedCall
+
+-- Execution: market microstructure — the Glosten-Milgrom adverse-selection
+-- spread, plus a six-point model witnessing that its hypotheses are satisfiable
+import MathFin.Execution.GlostenMilgrom
+import MathFin.Execution.GlostenMilgromModel
