@@ -27,7 +27,7 @@ open Set Filter MeasureTheory ProbabilityTheory Boundary
 open scoped NNReal Topology
 
 theorem localMartingale_of_ae_path_eq {Ω : Type*} [MeasurableSpace Ω]
-    {P : Measure Ω} [IsFiniteMeasure P] {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›}
+    {P : Measure Ω} {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›}
     {X Y : ℝ≥0 → Ω → ℝ} (hX : IsLocalMartingale X 𝓕 P)
     (hY : StronglyAdapted 𝓕 Y) (hcY : ∀ ω, Continuous (fun t => Y t ω))
     (heq : ∀ᵐ ω ∂P, ∀ t, X t ω = Y t ω) : IsLocalMartingale Y 𝓕 P := by

@@ -31,10 +31,13 @@ open scoped NNReal Topology
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+/-- The in-the-money contact set: the spots `S` in `[0,K]` at which the American put value
+equals the immediate payoff `K-S`. -/
 noncomputable def exerciseSet (P : Measure Ω) (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›)
     (W : ℝ≥0 → Ω → ℝ) (K r q σ : ℝ) (T : ℝ≥0) : Set ℝ :=
   {S | 0 ≤ S ∧ S ≤ K ∧ americanPutValue P 𝓕 W K r q σ S T = K-S}
 
+/-- The supremum of the in-the-money contact set. -/
 noncomputable def exerciseThreshold (P : Measure Ω) (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›)
     (W : ℝ≥0 → Ω → ℝ) (K r q σ : ℝ) (T : ℝ≥0) : ℝ :=
   sSup (exerciseSet P 𝓕 W K r q σ T)

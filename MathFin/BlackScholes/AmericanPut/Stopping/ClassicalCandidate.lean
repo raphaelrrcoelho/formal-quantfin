@@ -31,10 +31,13 @@ open scoped NNReal
 
 variable {Ω : Type*}
 
+/-- The strike-normalized log spot `log (S/K)+(r-q-σ^2/2)*t+σ*W t ω`. -/
 noncomputable def classicalLogSpot (W : ℝ≥0 → Ω → ℝ) (K r q σ S : ℝ)
     (t : ℝ≥0) (ω : Ω) : ℝ :=
   Real.log (S/K)+(r-q-σ^2/2)*(t : ℝ)+σ*W t ω
 
+/-- The discounted classical price `K*p` along the log spot, frozen at maturity: evaluated at
+`min t T` with remaining normalized time `σ^2/2*(T-min t T)`. -/
 noncomputable def classicalCandidate (W : ℝ≥0 → Ω → ℝ) (K r q σ S : ℝ)
     (p : ℝ → ℝ → ℝ) (T t : ℝ≥0) (ω : Ω) : ℝ :=
   let s := min t T

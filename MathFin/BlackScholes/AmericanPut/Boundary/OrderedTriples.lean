@@ -19,10 +19,13 @@ namespace MathFin.BlackScholes.AmericanPut.Boundary
 
 open Set
 
+/-- Three space-time points, each a pair `(x, t)`. -/
 abbrev SpaceTimeTriple := (ℝ × ℝ) × (ℝ × ℝ) × (ℝ × ℝ)
 
+/-- The triple of `x`, `y` and `z` at the common time `t`. -/
 def sameTimeTriple (x y z t : ℝ) : SpaceTimeTriple := ((x,t),(y,t),(z,t))
 
+/-- Triples of points of `Q` sharing a time, with spatial coordinates in increasing order. -/
 def orderedTriples (Q : Set (ℝ × ℝ)) : Set SpaceTimeTriple :=
   (Q ×ˢ Q ×ˢ Q) ∩ {w | w.1.2 = w.2.1.2 ∧ w.1.2 = w.2.2.2 ∧
     w.1.1 ≤ w.2.1.1 ∧ w.2.1.1 ≤ w.2.2.1}

@@ -22,6 +22,8 @@ open Set Filter MeasureTheory Boundary
 open MathFin.FeynmanKacHeatEquation
 open scoped Topology ContDiff
 
+/-- `Real.exp (-k*(t-a))` times the heat flow `feynmanU f (2*(t-a))`, evaluated at the drifted
+point `x+(k-h-1)*(t-a)`. -/
 noncomputable def linearPriceKernel (f : ℝ → ℝ) (k h a x t : ℝ) : ℝ :=
   Real.exp (-k*(t-a))*feynmanU f (2*(t-a)) (x+(k-h-1)*(t-a))
 

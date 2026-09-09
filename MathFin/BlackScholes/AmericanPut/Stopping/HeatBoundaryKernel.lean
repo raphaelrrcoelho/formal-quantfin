@@ -28,6 +28,7 @@ open Set Filter MeasureTheory
 open MathFin.FeynmanKacHeatEquation
 open scoped Topology ContDiff
 
+/-- The half-line heat boundary kernel `H(t,x) = x/t * heatKernel t x`. -/
 noncomputable def heatBoundaryKernel (t x : ℝ) : ℝ := x/t*heatKernel t x
 
 theorem heatKernel_hasDeriv_time {t : ℝ} (ht : 0 < t) (x : ℝ) :

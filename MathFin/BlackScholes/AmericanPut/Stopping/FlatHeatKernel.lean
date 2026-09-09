@@ -29,6 +29,7 @@ open Set Filter Polynomial
 open MathFin.FeynmanKacHeatEquation
 open scoped Topology ContDiff
 
+/-- The real power `t^p` damped by the smooth glue `expNegInvGlue`, hence zero for `t ≤ 0`. -/
 noncomputable def flatRpow (p t : ℝ) : ℝ := t^p * expNegInvGlue t
 
 theorem flatRpow_zero {t : ℝ} (ht : t ≤ 0) (p : ℝ) : flatRpow p t = 0 := by
@@ -66,6 +67,8 @@ theorem heatBoundaryKernel_unit_flat {t : ℝ} (ht : 0 < t) :
   norm_num only [one_pow,one_div,neg_div]
   field_simp
 
+/-- A causal rewriting of the heat boundary kernel through `flatRpow`, namely
+`(x^2)⁻¹*(2/Real.sqrt Real.pi)*flatRpow (-3/2) (2*(t/x^2))`. -/
 noncomputable def causalHeatBoundaryKernel (t x : ℝ) : ℝ :=
   (x^2)⁻¹ * (2/Real.sqrt Real.pi) * flatRpow (-3/2) (2*(t/x^2))
 

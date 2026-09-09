@@ -23,6 +23,8 @@ open scoped Topology ContDiff
 theorem pricingGauge_ne_zero (k h L a x t : ℝ) : pricingGauge k h L a x t ≠ 0 :=
   Real.exp_ne_zero _
 
+/-- The boundary datum `g` at time `a+s/2`, divided by the gauge
+`pricingGauge k h L a X (a+s/2)`: the datum read in the heat time `s = 2*(t-a)`. -/
 noncomputable def heatBoundaryDatum (g : ℝ → ℝ) (k h L a X s : ℝ) : ℝ :=
   g (a+s/2)/pricingGauge k h L a X (a+s/2)
 

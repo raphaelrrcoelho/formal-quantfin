@@ -23,6 +23,8 @@ open scoped NNReal Topology
 variable {Ω : Type*} [MeasurableSpace Ω]
   {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›} {X : ℝ≥0 → Ω → ℝ}
 
+/-- The margin `max 0 (min (R-|X t ω-x|) (δ-t))`: how far the path still is from the spatial
+radius `R` around `x` or from the terminal time `δ`, whichever is closer. -/
 noncomputable def rectangleMargin (X : ℝ≥0 → Ω → ℝ) (x R : ℝ) (δ t : ℝ≥0) (ω : Ω) : ℝ :=
   max 0 (min (R-|X t ω-x|) ((δ : ℝ)-(t : ℝ)))
 
@@ -49,6 +51,7 @@ theorem rectangleMargin_terminal (x R : ℝ) (δ : ℝ≥0) (ω : Ω) : rectangl
   rw [sub_self]
   exact max_eq_left (min_le_right _ _)
 
+/-- The first time the margin `rectangleMargin X x R δ` vanishes, as a rule with horizon `δ`. -/
 noncomputable def rectangleExitRule (ha : Adapted 𝓕 X) (hc : ∀ ω, Continuous (fun t => X t ω))
     (x R : ℝ) (δ : ℝ≥0) : BoundedRule 𝓕 δ :=
   firstContactRule (rectangleMargin_adapted ha x R δ) (rectangleMargin_continuous hc x R δ)

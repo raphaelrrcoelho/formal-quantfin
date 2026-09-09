@@ -50,6 +50,8 @@ theorem exists_boundary_time_cutoff (a T : ℝ) :
     have ha := neg_abs_le a
     exact (show ψ.rOut ≤ t by linarith).trans (le_abs_self t)
 
+/-- The two-sided correction on `[0,L]`: the half-line extension of `f₀` at depth `x` plus that
+of `f₁` at depth `L-x`. -/
 noncomputable def intervalHeatCorrection (f₀ f₁ : ℝ → ℝ) (L : ℝ) (x t : ℝ) : ℝ :=
   heatBoundaryExtension f₀ x t+heatBoundaryExtension f₁ (L-x) t
 

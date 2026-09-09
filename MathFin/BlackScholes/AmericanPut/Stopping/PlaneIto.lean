@@ -27,9 +27,13 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
+/-- The directional derivative `fderiv ℝ G z v` of a plane function `G` at `z` along `v`. -/
 noncomputable def planePartial (G : ℝ × ℝ → ℝ) (v : ℝ × ℝ) (z : ℝ × ℝ) : ℝ :=
   fderiv ℝ G z v
 
+/-- The second-order operator
+`planePartial G (1,0) z + (1/2)*planePartial (planePartial G (0,1)) (0,1) z`, i.e. the time
+derivative plus half the second space derivative. -/
 noncomputable def planeGenerator (G : ℝ × ℝ → ℝ) (z : ℝ × ℝ) : ℝ :=
   planePartial G (1,0) z + (1/2)*planePartial (planePartial G (0,1)) (0,1) z
 

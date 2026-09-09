@@ -25,6 +25,7 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory ProbabilityTheory
 open scoped NNReal Topology
 
+/-- The finite set of exercise times `min ((i : ℝ≥0)*δ) T` for `i ≤ ⌈T/δ⌉₊`. -/
 noncomputable def exerciseGrid (T δ : ℝ≥0) : Finset ℝ≥0 :=
   (Finset.range (⌈T/δ⌉₊+1)).image (fun i : ℕ => min ((i : ℝ≥0)*δ) T)
 
@@ -61,6 +62,8 @@ theorem rounded_time_stopping (θ : BoundedRule 𝓕 T) (hδ : 0 < δ) :
     rw [he]
     exact 𝓕.mono hfloor _ (by simpa only [WithTop.coe_le_coe] using θ.stopping ((⌊t/δ⌋₊ : ℝ≥0)*δ))
 
+/-- The rule `θ` rounded up to the next multiple of `δ` and capped at maturity, exercising at
+`min ((⌈θ.time ω/δ⌉₊ : ℝ≥0)*δ) T`. -/
 noncomputable def BoundedRule.roundUp (θ : BoundedRule 𝓕 T) (hδ : 0 < δ) : BoundedRule 𝓕 T where
   time := fun ω => min ((gridIndex θ δ ω : ℝ≥0)*δ) T
   stopping := rounded_time_stopping θ hδ

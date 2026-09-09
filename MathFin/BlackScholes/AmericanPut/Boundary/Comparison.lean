@@ -83,9 +83,13 @@ theorem rootProfile_ode {u v β ρ : ℝ}
   · field_simp
     linear_combination u * Real.exp (v * z) * hv - v * Real.exp (u * z) * hu
 
+/-- The upper branch `(-β + Real.sqrt (β ^ 2 + 4 * ρ)) / 2` of the quadratic formula for
+`z ^ 2 + β * z - ρ = 0`. -/
 noncomputable def positiveRoot (β ρ : ℝ) : ℝ :=
   (-β + Real.sqrt (β ^ 2 + 4 * ρ)) / 2
 
+/-- The lower branch `(-β - Real.sqrt (β ^ 2 + 4 * ρ)) / 2` of the quadratic formula for
+`z ^ 2 + β * z - ρ = 0`. -/
 noncomputable def negativeRoot (β ρ : ℝ) : ℝ :=
   (-β - Real.sqrt (β ^ 2 + 4 * ρ)) / 2
 

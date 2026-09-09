@@ -25,6 +25,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory
 open scoped Topology ContDiff Convolution
 
+/-- The boundary datum `g` convolved against the causal kernel at depth `x`, namely
+`∫ y, causalHeatBoundaryKernel (t-y) x * g y`. -/
 noncomputable def causalBoundaryIntegral (g : ℝ → ℝ) (x t : ℝ) : ℝ :=
   ∫ y, causalHeatBoundaryKernel (t-y) x * g y
 

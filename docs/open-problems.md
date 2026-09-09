@@ -71,7 +71,30 @@ A clean trichotomy in the dividend yield `q`:
 |---|---|
 | `q = 0` | convexity **proved** (Chen–Chadam–Cheng–Saunders; Ekström) |
 | `q > r` | convexity **disproved** — the boundary is not convex |
-| `0 < q < r` | **open** — observed numerically, no rigorous proof |
+| `0 < q < r` | **open** in the literature — see the status note below |
+
+**Status in this repo (2026-09-08).** `MathFin/BlackScholes/AmericanPut/` contains a
+machine-checked, axiom-clean proof covering `0 ≤ q ≤ r` — the whole open region and
+both endpoints — contributed in
+[#212](https://github.com/formal-applied-math/formal-mathfin/pull/212) and ported from
+[robertmartin8/AmericanPutConvexity](https://github.com/robertmartin8/AmericanPutConvexity).
+The two headline declarations are
+`Stopping.brownianUsualLogBoundary_convexOn` and `brownianUsualStockBoundary_strictConvexOn`.
+
+What that is and is not. The boundary is built from the actual optimal-stopping value —
+a supremum over all stopping times bounded by the horizon, on the completed usual
+filtration of Degenne's constructed Brownian motion — not from an assumed free-boundary
+solution, and the axiom audit shows no `sorryAx`. So the Lean says what it says. But the
+proof is new, was substantially AI-assisted, and **has not been refereed**; the kernel
+accepting a statement is evidence about the statement, not about whether it is the
+theorem the literature means. The declarations also do not quantify over arbitrary
+probability-space representations, and prove convexity in the chord sense, not `C²`
+regularity or `B'' > 0`.
+
+This entry therefore stays on the list, reclassified from *open* to **claimed-resolved,
+pending review**. It is the one place in this document where the repo has a candidate
+answer rather than a scouting report, and the honest reading is that someone should check
+it. `q > r` remains disproved and is not claimed.
 
 Regularity under jump diffusions is settled separately: `C¹` except at
 maturity, `C^∞` under a regularity assumption on the jump distribution, with

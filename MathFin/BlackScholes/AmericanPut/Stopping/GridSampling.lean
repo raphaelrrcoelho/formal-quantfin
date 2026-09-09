@@ -28,12 +28,14 @@ open scoped NNReal Topology
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+/-- The continuous filtration sampled at the uniform grid times `i*δ`. -/
 def gridFiltration (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›) (δ : ℝ≥0) :
     Filtration ℕ ‹MeasurableSpace Ω› where
   seq := fun i => 𝓕 ((i : ℝ≥0)*δ)
   mono' := fun _ _ hij => 𝓕.mono (mul_le_mul_of_nonneg_right (by exact_mod_cast hij) zero_le)
   le' := fun i => 𝓕.le _
 
+/-- The first grid index at or after a rule's time, `⌈θ.time ω/δ⌉₊`. -/
 noncomputable def gridIndex {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›} {T : ℝ≥0}
     (θ : BoundedRule 𝓕 T) (δ : ℝ≥0) (ω : Ω) : ℕ :=
   ⌈θ.time ω / δ⌉₊
@@ -72,6 +74,7 @@ theorem expected_gridValue_le {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω�
       exact_mod_cast gridIndex_bounded θ ω)
   simpa [stoppedValue,integral_neg] using hh
 
+/-- The mesh `((n : ℝ≥0)+1)⁻¹` of the `n`-th grid refinement. -/
 noncomputable def gridStep (n : ℕ) : ℝ≥0 := ((n : ℝ≥0)+1)⁻¹
 
 theorem gridStep_pos (n : ℕ) : 0 < gridStep n := by

@@ -28,7 +28,9 @@ open scoped NNReal
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+/-- A stopping time for `𝓕` with values in `ℝ≥0`, bounded pointwise by the horizon `T`. -/
 structure BoundedRule (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›) (T : ℝ≥0) where
+  /-- The time at which the rule stops. -/
   time : Ω → ℝ≥0
   stopping : IsStoppingTime 𝓕 (fun ω => (time ω : WithTop ℝ≥0))
   le_horizon : ∀ ω, time ω ≤ T
@@ -43,17 +45,20 @@ theorem measurable_time (θ : BoundedRule 𝓕 T) : Measurable θ.time := by
   apply 𝓕.le t
   simpa only [preimage,mem_Iic,WithTop.coe_le_coe] using θ.stopping t
 
+/-- The deterministic rule that stops at the fixed time `s`, for `s ≤ T`. -/
 def constant (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›) (T s : ℝ≥0) (hs : s ≤ T) :
     BoundedRule 𝓕 T where
   time := fun _ => s
   stopping := isStoppingTime_const 𝓕 s
   le_horizon := fun _ => hs
 
+/-- The rule that stops immediately, at time `0`. -/
 def zero (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›) (T : ℝ≥0) : BoundedRule 𝓕 T :=
   constant 𝓕 T 0 zero_le
 
 instance : Nonempty (BoundedRule 𝓕 T) := ⟨zero 𝓕 T⟩
 
+/-- The same stopping time, presented against a larger horizon `U ≥ T`. -/
 def extend (θ : BoundedRule 𝓕 T) (hTU : T ≤ U) : BoundedRule 𝓕 U where
   time := θ.time
   stopping := θ.stopping

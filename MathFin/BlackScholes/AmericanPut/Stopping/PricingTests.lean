@@ -24,6 +24,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory ProbabilityTheory
 open scoped NNReal Topology
 
+/-- The test function `F` composed with the affine space-time map
+`z ↦ (x+(k-h-1)*z.1+Real.sqrt 2*z.2, T-z.1)` and discounted by `exp (-k*z.1)`. -/
 noncomputable def pricingTestKernel (F : ℝ × ℝ → ℝ) (k h x : ℝ) (T : ℝ≥0)
     (z : ℝ × ℝ) : ℝ :=
   Real.exp (-k*z.1)*F (x+(k-h-1)*z.1+Real.sqrt 2*z.2,(T : ℝ)-z.1)

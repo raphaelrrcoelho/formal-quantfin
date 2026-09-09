@@ -43,6 +43,8 @@ theorem dividendSpatialOperator_sub_const_mul {F G : ℝ → ℝ} {x : ℝ}
     ((hG.differentiableAt (by norm_num)).const_mul ε),deriv_const_mul_field]
   ring
 
+/-- The price delayed by `a`, penalized by `ε` times the localization barrier:
+`delayedPrice p a x t - ε*localizationBarrier k h x t`. -/
 noncomputable def penalizedDelay (p : ℝ → ℝ → ℝ) (k h a ε x t : ℝ) : ℝ :=
   delayedPrice p a x t - ε*localizationBarrier k h x t
 

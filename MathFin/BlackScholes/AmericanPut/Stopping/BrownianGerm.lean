@@ -27,11 +27,15 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory ProbabilityTheory
 open scoped NNReal Topology
 
+/-- The `n`-th probe time `(1/(n+1))^2`. -/
 noncomputable def brownianProbeTime (n : ℕ) : ℝ≥0 := (1/((n : ℝ≥0)+1))^2
 
+/-- The Brownian evaluation at `brownianProbeTime n`, normalized by the factor `n+1`. -/
 noncomputable def brownianProbe (n : ℕ) (ω : ℝ≥0 → ℝ) : ℝ :=
   ((n : ℝ)+1)*brownian (brownianProbeTime n) ω
 
+/-- The set of paths whose normalized probes `brownianProbe n` fall below `-1` for infinitely
+many `n`. -/
 def brownianNegativeGerm : Set (ℝ≥0 → ℝ) :=
   {ω | ∀ N : ℕ, ∃ n : ℕ, N ≤ n ∧ brownianProbe n ω < -1}
 
@@ -100,6 +104,8 @@ theorem brownianNegativeGerm_measurable : MeasurableSet brownianNegativeGerm := 
       ((Filtration.natural brownian (fun t => (measurable_brownian t).stronglyMeasurable)).le 1)
   exact hle _ brownianNegativeGerm_measurable_germ
 
+/-- The continuous test function `max 0 (min 1 (-x-1))`, valued in `[0,1]` and zero on
+`-1 ≤ x`. -/
 noncomputable def negativeProbeTest (x : ℝ) : ℝ := max 0 (min 1 (-x-1))
 
 theorem negativeProbeTest_continuous : Continuous negativeProbeTest := by

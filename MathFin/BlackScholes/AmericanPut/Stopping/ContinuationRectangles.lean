@@ -20,6 +20,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory
 open scoped NNReal Topology
 
+/-- Every point `(y,T-s)` with `|y-x| ≤ R` and `s ≤ δ` lies in the canonical continuation
+region: the closed backward rectangle at `(x,T)` of spatial radius `R` and time depth `δ`. -/
 def InContinuationRectangle (k h x : ℝ) (T : ℝ≥0) (R : ℝ) (δ : ℝ≥0) : Prop :=
   ∀ s : ℝ≥0, s ≤ δ → ∀ y : ℝ, |y-x| ≤ R → (y,(T : ℝ)-(s : ℝ)) ∈ canonicalContinuationRegion k h
 

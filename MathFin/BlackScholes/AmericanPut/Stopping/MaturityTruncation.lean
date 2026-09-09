@@ -23,6 +23,7 @@ open scoped NNReal Topology
 
 variable {Ω : Type*} [MeasurableSpace Ω] {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›}
 
+/-- The rule `θ` capped at the new horizon `U`, stopping at `min (θ.time ω) U`. -/
 def BoundedRule.truncate {T : ℝ≥0} (θ : BoundedRule 𝓕 T) (U : ℝ≥0) : BoundedRule 𝓕 U where
   time := fun ω => min (θ.time ω) U
   stopping := by

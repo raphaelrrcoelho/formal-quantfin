@@ -24,6 +24,7 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory
 open scoped Topology BoundedContinuousFunction
 
+/-- The difference `f-g` of two causal boundary inputs; vanishing on `(-∞,a]` is preserved. -/
 noncomputable def causalBoundarySub {a : ℝ} (f g : CausalBoundaryData a) : CausalBoundaryData a :=
   ⟨f.1-g.1,fun t ht => by change f.1 t-g.1 t = 0; rw [f.2 t ht,g.2 t ht,sub_self]⟩
 
@@ -32,6 +33,9 @@ theorem causalBoundarySub_dist {a : ℝ} (f g h : CausalBoundaryData a) :
   simp only [Subtype.dist_eq,causalBoundarySub,dist_eq_norm]
   rw [show (f.1-g.1)-(f.1-h.1) = -(g.1-h.1) by abel,norm_neg]
 
+/-- One step of the coupled boundary iteration, sending `p` to
+`(g₀-crossBoundaryCausal χ L p.2,g₁-crossBoundaryCausal χ L p.1)`: each component is corrected
+by the cross-boundary transport of the other. -/
 noncomputable def coupledBoundaryStep {a : ℝ} (χ : ℝ →ᵇ ℝ) (L : ℝ)
     (g₀ g₁ : CausalBoundaryData a) (p : CausalBoundaryData a × CausalBoundaryData a) :
     CausalBoundaryData a × CausalBoundaryData a :=

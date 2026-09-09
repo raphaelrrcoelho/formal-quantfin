@@ -21,6 +21,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory ProbabilityTheory
 open scoped NNReal Topology
 
+/-- The log state `x+β*t+σ*B_t`: drift `β` and volatility `σ` applied to the constructed
+Brownian motion, started at `x`. -/
 noncomputable def brownianLogState (β σ x : ℝ) (t : ℝ≥0) (ω : ℝ≥0 → ℝ) : ℝ :=
   x+β*(t : ℝ)+σ*brownian t ω
 

@@ -23,12 +23,15 @@ open scoped NNReal
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+/-- The discrete filtration `i ↦ 𝓕 (s i)` obtained by sampling `𝓕` along the monotone times `s`. -/
 def sampledFiltration (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›)
     (s : ℕ → ℝ≥0) (hs : Monotone s) : Filtration ℕ ‹MeasurableSpace Ω› where
   seq := fun i => 𝓕 (s i)
   mono' := fun _ _ hij => 𝓕.mono (hs hij)
   le' := fun i => 𝓕.le (s i)
 
+/-- A discrete rule `η` for `sampledFiltration 𝓕 s hs` read back in continuous time as
+`ω ↦ s (η.time ω)`, with horizon `s N`. -/
 def DiscreteRule.toSampledRule {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›}
     {s : ℕ → ℝ≥0} {hs : Monotone s} {N : ℕ}
     (η : DiscreteRule (sampledFiltration 𝓕 s hs) N) : BoundedRule 𝓕 (s N) where

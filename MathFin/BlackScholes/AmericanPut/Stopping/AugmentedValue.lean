@@ -27,6 +27,8 @@ open scoped NNReal Topology
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+/-- The rule `θ` reread in a larger filtration `𝓖 ≥ 𝓕`: the same exercise time, still a
+stopping time and still bounded by `T`. -/
 def BoundedRule.enlargeFiltration {𝓕 𝓖 : Filtration ℝ≥0 ‹MeasurableSpace Ω›}
     {T : ℝ≥0} (θ : BoundedRule 𝓕 T) (hFG : 𝓕 ≤ 𝓖) : BoundedRule 𝓖 T where
   time := θ.time
@@ -42,6 +44,8 @@ theorem americanPutValue_mono_filtration {P : Measure Ω} [IsProbabilityMeasure 
   rintro _ ⟨θ,rfl⟩
   exact expectedReward_le_value hW hK hr hS (θ.enlargeFiltration hFG)
 
+/-- The right-continuous regularization of the raw Brownian filtration after adjoining the
+`gaussianLimit`-null ambient sets. -/
 noncomputable def brownianRightAugFiltration :=
   (ambientNullAugmentation brownianFiltration gaussianLimit).rightCont
 
@@ -59,6 +63,8 @@ theorem brownianRightAugFiltration_contains_null {s : Set (ℝ≥0 → ℝ)}
     ambientNullAugmentation brownianFiltration gaussianLimit t from le_sup_right)
   exact MeasurableSpace.measurableSet_generateFrom ⟨hs,hnull⟩
 
+/-- The finite-horizon American put value of the constructed Brownian model, taken over the
+rules of `brownianRightAugFiltration`. -/
 noncomputable def brownianRightAugAmericanPut (K r q σ S : ℝ) (T : ℝ≥0) : ℝ :=
   americanPutValue gaussianLimit brownianRightAugFiltration brownian K r q σ S T
 

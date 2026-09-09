@@ -29,6 +29,8 @@ open scoped NNReal Topology
 
 variable {K r q σ S : ℝ} {p : ℝ → ℝ → ℝ} {b : ℝ → ℝ}
 
+/-- The `n`-th interior localization rule of the constructed Brownian model: `interiorRule`
+applied to the classical gap `classicalGap brownian K r q σ S p T`. -/
 noncomputable def brownianInteriorRule
     (hp : DividendPutSolution (normalizedRate r σ) (normalizedRate q σ) p b)
     (T : ℝ≥0) (n : ℕ) : BoundedRule brownianFiltration T :=

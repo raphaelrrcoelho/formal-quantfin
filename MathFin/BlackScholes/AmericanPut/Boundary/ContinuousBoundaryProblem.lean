@@ -25,6 +25,8 @@ namespace MathFin.BlackScholes.AmericanPut.Boundary
 open Set Filter
 open scoped Topology ContDiff
 
+/-- Classical normalized put solution in the regime `0 ≤ h ≤ k`, `0 < k`, asking only that
+the boundary be continuous: `DividendPutSolution` without its `boundary_smooth` field. -/
 structure ContinuousBoundaryPutSolution (k h : ℝ) (p : ℝ → ℝ → ℝ) (b : ℝ → ℝ) : Prop where
   rate_pos : 0 < k
   dividend_nonneg : 0 ≤ h

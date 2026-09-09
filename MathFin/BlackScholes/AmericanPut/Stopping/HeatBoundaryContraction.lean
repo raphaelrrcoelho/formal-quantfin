@@ -26,6 +26,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory
 open scoped Topology BoundedContinuousFunction
 
+/-- The mass of the boundary kernel at depth `x` arriving within elapsed time `D`, namely
+`∫ s in Ioc 0 D, heatBoundaryKernel s x`. -/
 noncomputable def boundaryArrivalMass (x D : ℝ) : ℝ :=
   ∫ s in Ioc 0 D, heatBoundaryKernel s x
 
@@ -89,6 +91,7 @@ theorem heatBoundaryExtension_sub (f g : ℝ →ᵇ ℝ) (x t : ℝ) :
     (heatBoundaryExtension_integrable f.continuous f.norm_coe_le_norm x t)
     (heatBoundaryExtension_integrable g.continuous g.norm_coe_le_norm x t)]
 
+/-- Bounded continuous boundary data that vanish at every time `t ≤ a`. -/
 abbrev CausalBoundaryData (a : ℝ) := {g : ℝ →ᵇ ℝ // ∀ t, t ≤ a → g t = 0}
 
 theorem isClosed_causalBoundaryData (a : ℝ) :
@@ -102,6 +105,8 @@ instance (a : ℝ) : CompleteSpace (CausalBoundaryData a) :=
 
 instance (a : ℝ) : Inhabited (CausalBoundaryData a) := ⟨⟨0,fun _ _ => rfl⟩⟩
 
+/-- The bounded continuous function `t ↦ χ t * heatBoundaryExtension g L t`: the half-line
+extension of `g` read at depth `L`, multiplied by `χ`. -/
 noncomputable def crossBoundaryMap (χ : ℝ →ᵇ ℝ) (L : ℝ) (g : ℝ →ᵇ ℝ) : ℝ →ᵇ ℝ :=
   BoundedContinuousFunction.ofNormedAddCommGroup
     (fun t => χ t*heatBoundaryExtension g L t)
@@ -111,6 +116,8 @@ noncomputable def crossBoundaryMap (χ : ℝ →ᵇ ℝ) (L : ℝ) (g : ℝ →�
         exact mul_le_mul (χ.norm_coe_le_norm t)
           (heatBoundaryExtension_bound g.norm_coe_le_norm L t) (norm_nonneg _) (norm_nonneg _))
 
+/-- `crossBoundaryMap χ L` as a self-map of `CausalBoundaryData a`: the extension of causal data
+still vanishes for `t ≤ a`. -/
 noncomputable def crossBoundaryCausal {a : ℝ} (χ : ℝ →ᵇ ℝ) (L : ℝ)
     (g : CausalBoundaryData a) : CausalBoundaryData a :=
   ⟨crossBoundaryMap χ L g.1,fun t ht => by

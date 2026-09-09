@@ -26,6 +26,9 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory ProbabilityTheory Boundary
 open scoped NNReal Topology
 
+/-- The `brownianUsualAmericanPut` value at strike `1`, rate `k`, dividend `h`, volatility
+`Real.sqrt 2`, spot `Real.exp x` and horizon `t.toNNReal`. Negative `t` is clamped to zero by
+`toNNReal`. -/
 noncomputable def canonicalPrice (k h x t : ℝ) : ℝ :=
   brownianUsualAmericanPut 1 k h (Real.sqrt 2) (Real.exp x) t.toNNReal
 

@@ -27,6 +27,7 @@ open scoped NNReal Topology
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+/-- The continuous filtration sampled at the capped grid times `min (i*δ) T`. -/
 def cappedGridFiltration (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›) (T δ : ℝ≥0) :
     Filtration ℕ ‹MeasurableSpace Ω› where
   seq := fun i => 𝓕 (min ((i : ℝ≥0)*δ) T)
@@ -44,6 +45,8 @@ theorem rounded_grid_time_eq {T δ t : ℝ≥0} (hδ : 0 < δ) (ht : t ∈ exerc
 
 variable {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›} {T δ : ℝ≥0}
 
+/-- A grid-valued rule read as a rule for `cappedGridFiltration`, indexed by `gridIndex θ.val δ`
+and bounded by `⌈T/δ⌉₊`. -/
 noncomputable def GridRule.toDiscreteRule (θ : GridRule 𝓕 T δ) (hδ : 0 < δ) :
     DiscreteRule (cappedGridFiltration 𝓕 T δ) ⌈T/δ⌉₊ where
   time := gridIndex θ.val δ
@@ -62,6 +65,8 @@ theorem GridRule.toDiscreteRule_time (θ : GridRule 𝓕 T δ) (hδ : 0 < δ) (�
     min (((θ.toDiscreteRule hδ).time ω : ℝ≥0)*δ) T = θ.val.time ω :=
   rounded_grid_time_eq hδ (θ.property ω)
 
+/-- A rule for `cappedGridFiltration` read back in physical time, stopping at the capped grid
+time `min (η.time ω*δ) T`. -/
 noncomputable def DiscreteRule.toPhysicalBoundedRule
     (η : DiscreteRule (cappedGridFiltration 𝓕 T δ) ⌈T/δ⌉₊) (hδ : 0 < δ) : BoundedRule 𝓕 T where
   time := fun ω => min ((η.time ω : ℝ≥0)*δ) T
@@ -85,6 +90,8 @@ noncomputable def DiscreteRule.toPhysicalBoundedRule
       constructor <;> intro hh <;> exact_mod_cast hh
   le_horizon := fun _ => min_le_right _ _
 
+/-- `DiscreteRule.toPhysicalBoundedRule` together with the proof that its times lie in
+`exerciseGrid T δ`. -/
 noncomputable def DiscreteRule.toPhysicalGridRule
     (η : DiscreteRule (cappedGridFiltration 𝓕 T δ) ⌈T/δ⌉₊) (hδ : 0 < δ) : GridRule 𝓕 T δ := by
   refine ⟨η.toPhysicalBoundedRule hδ,?_⟩
@@ -92,6 +99,7 @@ noncomputable def DiscreteRule.toPhysicalGridRule
   apply Finset.mem_image.mpr
   exact ⟨η.time ω,Finset.mem_range.mpr (Nat.lt_succ_of_le (η.le_horizon ω)),rfl⟩
 
+/-- The put reward collected at the deterministic capped grid time `min (i*δ) T`. -/
 noncomputable def gridReward (W : ℝ≥0 → Ω → ℝ) (K r q σ S : ℝ) (T δ : ℝ≥0)
     (i : ℕ) : Ω → ℝ :=
   putReward W K r q σ S (fun _ => min ((i : ℝ≥0)*δ) T)

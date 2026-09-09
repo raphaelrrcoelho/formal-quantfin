@@ -55,6 +55,7 @@ theorem shiftedProfile_hasDeriv_t (hf : ProfileData (α - c) k f) (x t : ℝ) :
   simp only [id_eq]
   ring
 
+/-- The quotient of `u` by the shifted profile, `u x t / f (x + c * t - d)`. -/
 noncomputable def gauge (u : ℝ → ℝ → ℝ) (f : ℝ → ℝ) (c d x t : ℝ) : ℝ :=
   u x t / f (x + c * t - d)
 

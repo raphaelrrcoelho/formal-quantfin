@@ -26,6 +26,7 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open MeasureTheory Set Filter
 open scoped NNReal Topology
 
+/-- The margin `((n : ℝ)+1)⁻¹` of the `n`-th localization. -/
 noncomputable def localizationEps (n : ℕ) : ℝ := ((n : ℝ)+1)⁻¹
 
 theorem localizationEps_pos (n : ℕ) : 0 < localizationEps n := by
@@ -38,6 +39,8 @@ theorem localizationEps_tendsto : Tendsto localizationEps atTop (𝓝 0) :=
 variable {Ω : Type*} [MeasurableSpace Ω]
   {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›} {Z W : ℝ≥0 → Ω → ℝ}
 
+/-- The nonnegative slack in the three interior margins at time `t`: `Z` above `localizationEps n`,
+`|W|` below `(n : ℝ)+1`, and remaining maturity above `localizationEps n`. -/
 noncomputable def localizationMargin (Z W : ℝ≥0 → Ω → ℝ) (T : ℝ≥0)
     (n : ℕ) (t : ℝ≥0) (ω : Ω) : ℝ :=
   max 0 (min (Z t ω-localizationEps n)
@@ -71,6 +74,7 @@ theorem localizationMargin_terminal (Z W : ℝ≥0 → Ω → ℝ) (T : ℝ≥0)
     have hh := (localizationEps_pos n).le
     linarith))
 
+/-- The rule stopping at the first zero of `localizationMargin Z W T n`, capped at `T`. -/
 noncomputable def interiorRule (hZ : Adapted 𝓕 Z) (hW : Adapted 𝓕 W)
     (hcZ : ∀ ω, Continuous (fun t => Z t ω)) (hcW : ∀ ω, Continuous (fun t => W t ω))
     (T : ℝ≥0) (n : ℕ) : BoundedRule 𝓕 T :=

@@ -34,6 +34,8 @@ theorem normalized_putReward_eq_logPayoff (k h x : ℝ) (θ : (ℝ≥0 → ℝ) 
   rw [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2),show (2 : ℝ)/2 = 1 by norm_num,
     Real.exp_add x]
 
+/-- The discounted put slope between `b` and `x`, evaluated at the actual contact time `s` of the
+path `ω` and at the displacement `(k-h-1)*s + Real.sqrt 2*brownian s ω`. -/
 noncomputable def actualContactSlope {k h : ℝ} (hk : 0 ≤ k) (b x : ℝ) (T : ℝ≥0)
     (ω : ℝ≥0 → ℝ) : ℝ :=
   let s := brownianUsualActualContactTime (h := h) hk x T ω

@@ -39,6 +39,7 @@ theorem canonicalPrice_monotone_time {k h : ℝ} (hk : 0 ≤ k) (x : ℝ) :
 theorem canonicalPrice_time_deriv_nonneg {k h : ℝ} (hk : 0 ≤ k) (x t : ℝ) :
     0 ≤ deriv (canonicalPrice k h x) t := (canonicalPrice_monotone_time hk x).deriv_nonneg
 
+/-- The canonical price above its unclipped payoff: `canonicalPrice k h x t-(1-Real.exp x)`. -/
 noncomputable def canonicalIntrinsicPremium (k h x t : ℝ) : ℝ :=
   canonicalPrice k h x t - (1-Real.exp x)
 

@@ -20,6 +20,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory
 open scoped Topology ContDiff
 
+/-- The derivative of `F` at the plane point `z` along the direction `v`, read off the Fréchet
+derivative `fderiv ℝ F z`. -/
 noncomputable def heatPartial (F : ℝ × ℝ → ℝ) (v z : ℝ × ℝ) : ℝ :=
   fderiv ℝ F z v
 
@@ -40,6 +42,7 @@ theorem heatPartial_space {F : ℝ × ℝ → ℝ} {t x : ℝ}
   convert! hF.hasFDerivAt.comp_hasDerivAt x
     ((hasDerivAt_const x t).prodMk (hasDerivAt_id x)) using 1
 
+/-- The causal heat boundary kernel as one function of the plane point `z = (t,x)`. -/
 noncomputable def boundaryKernelPlane (z : ℝ × ℝ) : ℝ := causalHeatBoundaryKernel z.1 z.2
 
 theorem boundaryKernelPlane_smoothAt {z : ℝ × ℝ} (hx : 0 < z.2) :

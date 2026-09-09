@@ -21,6 +21,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory ProbabilityTheory Boundary
 open scoped NNReal Topology
 
+/-- The usual filtration of `brownian`: the completed raw filtration, null-augmented and then
+made right-continuous. -/
 noncomputable def brownianUsualFiltration :
     Filtration ℝ≥0 (completedMeasurableSpace gaussianLimit) :=
   (ambientNullAugmentation (mΩ := completedMeasurableSpace gaussianLimit)
@@ -60,6 +62,8 @@ theorem brownian_completed_measurable :
   exact measurable_uncurry_of_continuous_of_measurable continuous_brownian
     hm
 
+/-- The `americanPutValue` of `brownian` on `brownianUsualFiltration`, under the completed
+Gaussian limit measure. -/
 noncomputable def brownianUsualAmericanPut (K r q σ S : ℝ) (T : ℝ≥0) : ℝ :=
   @americanPutValue (ℝ≥0 → ℝ) (completedMeasurableSpace gaussianLimit)
     (completedMeasure gaussianLimit) brownianUsualFiltration brownian K r q σ S T
@@ -122,6 +126,8 @@ theorem brownianUsualAmericanPut_eq_raw {K r q σ S : ℝ}
     rw [hcontact] at hl
     exact hl
 
+/-- The `exerciseThreshold` of `brownian` on `brownianUsualFiltration`, under the completed
+Gaussian limit measure. -/
 noncomputable def brownianUsualExerciseBoundary (K r q σ : ℝ) (T : ℝ≥0) : ℝ :=
   @exerciseThreshold (ℝ≥0 → ℝ) (completedMeasurableSpace gaussianLimit)
     (completedMeasure gaussianLimit) brownianUsualFiltration brownian K r q σ T

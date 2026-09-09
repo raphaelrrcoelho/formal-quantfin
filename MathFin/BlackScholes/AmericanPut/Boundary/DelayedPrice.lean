@@ -26,6 +26,7 @@ namespace MathFin.BlackScholes.AmericanPut.Boundary
 open Set Filter
 open scoped Topology ContDiff
 
+/-- The price on a clock delayed by `a` and clamped at zero: `p x (max (t - a) 0)`. -/
 noncomputable def delayedPrice (p : ℝ → ℝ → ℝ) (a x t : ℝ) : ℝ :=
   p x (max (t-a) 0)
 

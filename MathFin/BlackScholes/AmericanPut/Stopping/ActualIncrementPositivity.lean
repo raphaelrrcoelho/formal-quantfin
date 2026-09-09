@@ -28,6 +28,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter Boundary Boundary.Comparison
 open scoped Topology ContDiff
 
+/-- The canonical time increment divided by the stationary profile:
+`canonicalTimeIncrement k h δ x t / profile (k-h-1) k x`. -/
 noncomputable def canonicalIncrementGauge (k h δ x t : ℝ) : ℝ :=
   canonicalTimeIncrement k h δ x t / profile (k-h-1) k x
 

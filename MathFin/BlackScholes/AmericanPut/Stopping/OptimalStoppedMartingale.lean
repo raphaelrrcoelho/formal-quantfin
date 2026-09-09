@@ -28,6 +28,7 @@ open scoped NNReal Topology
 
 variable {Ω : Type*} [MeasurableSpace Ω] {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›}
 
+/-- The two-valued rule stopping at `i` on the event `A ∈ 𝓕 i` and at `j` off it. -/
 noncomputable def BoundedRule.binary {i j : ℝ≥0} (hij : i ≤ j) (A : Set Ω)
     (hA : MeasurableSet[𝓕 i] A) : BoundedRule 𝓕 j := by
   classical
@@ -62,6 +63,7 @@ noncomputable def BoundedRule.binary {i j : ℝ≥0} (hij : i ≤ j) (A : Set Ω
     · exact hij
     · exact le_rfl
 
+/-- The rule `τ` stopped no later than the deterministic time `t`. -/
 def BoundedRule.capTime {T : ℝ≥0} (τ : BoundedRule 𝓕 T) (t : ℝ≥0) : BoundedRule 𝓕 T where
   time := fun ω => min t (τ.time ω)
   stopping := by
@@ -71,6 +73,7 @@ def BoundedRule.capTime {T : ℝ≥0} (τ : BoundedRule 𝓕 T) (t : ℝ≥0) : 
     simp only [mem_setOf_eq,WithTop.coe_le_coe,min_le_iff,mem_union]
   le_horizon := fun ω => (min_le_right _ _).trans (τ.le_horizon ω)
 
+/-- The rule `τ` stopped no later than `BoundedRule.binary hij A hA`. -/
 noncomputable def BoundedRule.capBinary {T i j : ℝ≥0} (τ : BoundedRule 𝓕 T)
     (hij : i ≤ j) (A : Set Ω) (hA : MeasurableSet[𝓕 i] A) : BoundedRule 𝓕 T where
   time := fun ω => min ((BoundedRule.binary hij A hA).time ω) (τ.time ω)

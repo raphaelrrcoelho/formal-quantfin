@@ -29,10 +29,12 @@ open scoped NNReal
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+/-- The expected discounted put rewards ranging over all rules bounded by the horizon `T`. -/
 noncomputable def exerciseValues (P : Measure Ω) (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›)
     (W : ℝ≥0 → Ω → ℝ) (K r q σ S : ℝ) (T : ℝ≥0) : Set ℝ :=
   range (fun θ : BoundedRule 𝓕 T => ∫ ω, putReward W K r q σ S θ.time ω ∂P)
 
+/-- Supremum of `exerciseValues`, the American put value over rules bounded by `T`. -/
 noncomputable def americanPutValue (P : Measure Ω) (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›)
     (W : ℝ≥0 → Ω → ℝ) (K r q σ S : ℝ) (T : ℝ≥0) : ℝ :=
   sSup (exerciseValues P 𝓕 W K r q σ S T)

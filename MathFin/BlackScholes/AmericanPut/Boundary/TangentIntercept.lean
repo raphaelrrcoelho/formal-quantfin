@@ -26,6 +26,7 @@ namespace MathFin.BlackScholes.AmericanPut.Boundary
 open Set Filter
 open scoped Topology ContDiff
 
+/-- Value at `0` of the tangent to `b` at `t`: `b t - t * deriv b t`. -/
 noncomputable def tangentIntercept (b : ℝ → ℝ) (t : ℝ) : ℝ := b t - t * deriv b t
 
 theorem tangentIntercept_hasDeriv {b : ℝ → ℝ} (hb : ContDiffOn ℝ ∞ b (Ioi 0))

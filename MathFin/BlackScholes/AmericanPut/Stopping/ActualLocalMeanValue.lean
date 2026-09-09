@@ -39,6 +39,8 @@ theorem brownianLogState_usual_adapted (β σ x : ℝ) :
   intro t
   exact measurable_const.add (measurable_const.mul (brownianUsual_adapted t))
 
+/-- Exit rule from the rectangle of spatial half-width `R` and duration `δ`, for the
+Brownian log-state started at `x`, on the completed usual filtration. -/
 noncomputable def actualRectangleExitRule (k h x R : ℝ) (δ : ℝ≥0) :
     @BoundedRule (ℝ≥0 → ℝ) (completedMeasurableSpace gaussianLimit) brownianUsualFiltration δ :=
   @rectangleExitRule _ (completedMeasurableSpace gaussianLimit) brownianUsualFiltration
@@ -46,6 +48,7 @@ noncomputable def actualRectangleExitRule (k h x R : ℝ) (δ : ℝ≥0) :
     (brownianLogState_usual_adapted (k-h-1) (Real.sqrt 2) x)
     (brownianLogState_continuous (k-h-1) (Real.sqrt 2) x) x R δ
 
+/-- The stopping time of `actualRectangleExitRule`. -/
 noncomputable def actualRectangleExitTime (k h x R : ℝ) (δ : ℝ≥0) : (ℝ≥0 → ℝ) → ℝ≥0 :=
   @BoundedRule.time _ (completedMeasurableSpace gaussianLimit) brownianUsualFiltration δ
     (actualRectangleExitRule k h x R δ)

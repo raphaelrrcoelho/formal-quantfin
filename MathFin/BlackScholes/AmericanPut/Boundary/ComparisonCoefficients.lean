@@ -84,6 +84,7 @@ theorem profile_slope_and_deriv_bounded {β ρ : ℝ} (hρ : 0 < ρ) :
   · linarith [hm z]
   · linarith [hm' z]
 
+/-- The drift `α` corrected by twice the logarithmic slope of `f`, read at `x + c * t - d`. -/
 noncomputable def normalizedDrift (α c d : ℝ) (f : ℝ → ℝ) (x t : ℝ) : ℝ :=
   α + 2 * logSlope f (x + c * t - d)
 

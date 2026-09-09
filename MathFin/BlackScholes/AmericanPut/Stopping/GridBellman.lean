@@ -38,6 +38,7 @@ theorem gridReward_integrable {P : Measure Ω} [IsProbabilityMeasure P]
     Integrable (gridReward W K r q σ S T δ i) P :=
   putReward_integrable hW P hK hr hS measurable_const
 
+/-- The Bellman first-contact rule for the grid rewards, carried back to physical grid times. -/
 noncomputable def optimalGridRule (P : Measure Ω) (ha : Adapted 𝓕 W)
     (K r q σ S : ℝ) (T : ℝ≥0) {δ : ℝ≥0} (hδ : 0 < δ) : GridRule 𝓕 T δ :=
   (finiteBellmanRule (P := P) (gridReward_adapted ha K r q σ S T δ) ⌈T/δ⌉₊).toPhysicalGridRule hδ
@@ -75,6 +76,8 @@ theorem optimalGridRule_payoffs_tendsto (hW : Measurable W.uncurry) (ha : Adapte
   rw [he]
   exact gridValue_tendsto_americanValue hW hpaths hK hr hS
 
+/-- The optimal grid rule of the canonical model (strike `1`, rates `k` and `h`, volatility
+`Real.sqrt 2`, spot `Real.exp x`, horizon `t.toNNReal`) at grid step `gridStep n`. -/
 noncomputable def canonicalOptimalGridRule (k h x t : ℝ) (n : ℕ) :
     @GridRule (ℝ≥0 → ℝ) (completedMeasurableSpace gaussianLimit)
       brownianUsualFiltration t.toNNReal (gridStep n) :=
@@ -82,6 +85,7 @@ noncomputable def canonicalOptimalGridRule (k h x t : ℝ) (n : ℕ) :
     (completedMeasure gaussianLimit) brownianUsual_adapted 1 k h (Real.sqrt 2) (Real.exp x)
     t.toNNReal (gridStep n) (gridStep_pos n)
 
+/-- The exercise time of the canonical optimal grid rule. -/
 noncomputable def canonicalOptimalGridTime (k h x t : ℝ) (n : ℕ) : (ℝ≥0 → ℝ) → ℝ≥0 :=
   @BoundedRule.time (ℝ≥0 → ℝ) (completedMeasurableSpace gaussianLimit) brownianUsualFiltration
     t.toNNReal (canonicalOptimalGridRule k h x t n).val

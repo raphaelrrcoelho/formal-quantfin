@@ -26,6 +26,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory ProbabilityTheory
 open scoped NNReal Topology
 
+/-- The `brownianHeatFlow` of `f` over time `(σ^2*(T-min t T)).toNNReal`, started from the log
+state `brownianLogState β σ x (min t T) ω` shifted by `β*(T-min t T)`. -/
 noncomputable def brownianTerminalValue (f : ℝ → ℝ) (β σ x : ℝ) (T t : ℝ≥0)
     (ω : ℝ≥0 → ℝ) : ℝ :=
   brownianHeatFlow f (σ^2*((T : ℝ)-(min t T : ℝ≥0))).toNNReal

@@ -28,12 +28,16 @@ open scoped NNReal Topology
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+/-- A bounded rule for `𝓕` whose exercise time always lands in the finite grid
+`exerciseGrid T δ`. -/
 def GridRule (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›) (T δ : ℝ≥0) :=
   {θ : BoundedRule 𝓕 T // ∀ ω, θ.time ω ∈ exerciseGrid T δ}
 
+/-- The grid rule that exercises immediately at time `0`. -/
 def GridRule.zero (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›) (T δ : ℝ≥0) : GridRule 𝓕 T δ :=
   ⟨BoundedRule.zero 𝓕 T,fun _ => zero_mem_exerciseGrid T δ⟩
 
+/-- The grid rule that always waits until maturity `T`, which is a grid time once `0 < δ`. -/
 def GridRule.maturity (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›) (T : ℝ≥0)
     {δ : ℝ≥0} (hδ : 0 < δ) : GridRule 𝓕 T δ :=
   ⟨BoundedRule.constant 𝓕 T T le_rfl,fun _ => maturity_mem_exerciseGrid T hδ⟩
@@ -41,10 +45,14 @@ def GridRule.maturity (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›) (T : 
 instance gridRule_nonempty (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›) (T δ : ℝ≥0) :
     Nonempty (GridRule 𝓕 T δ) := ⟨GridRule.zero 𝓕 T δ⟩
 
+/-- The grid rule obtained from `θ` by rounding its exercise time up to the next grid time
+(`BoundedRule.roundUp`). -/
 noncomputable def BoundedRule.toGridRule {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›}
     {T δ : ℝ≥0} (θ : BoundedRule 𝓕 T) (hδ : 0 < δ) : GridRule 𝓕 T δ :=
   ⟨θ.roundUp hδ,θ.roundUp_mem_grid hδ⟩
 
+/-- The supremum of the expected discounted put reward over rules that exercise only on the
+grid `exerciseGrid T δ`. -/
 noncomputable def gridAmericanPutValue (P : Measure Ω) (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›)
     (W : ℝ≥0 → Ω → ℝ) (K r q σ S : ℝ) (T δ : ℝ≥0) : ℝ :=
   sSup (range (fun θ : GridRule 𝓕 T δ => ∫ ω, putReward W K r q σ S θ.val.time ω ∂P))
@@ -122,6 +130,9 @@ theorem americanValue_eq_sup_gridValues (hW : Measurable W.uncurry)
     rintro _ ⟨n,rfl⟩
     exact gridValue_le_value hW hK hr hS
 
+/-- The finite-grid counterpart of `canonicalPrice`: `gridAmericanPutValue` on the completed
+usual Brownian filtration at strike `1`, rate `k`, dividend `h`, volatility `Real.sqrt 2`,
+spot `Real.exp x`, horizon `t.toNNReal` and mesh `gridStep n`. -/
 noncomputable def canonicalGridPrice (k h x t : ℝ) (n : ℕ) : ℝ :=
   @gridAmericanPutValue (ℝ≥0 → ℝ) (completedMeasurableSpace gaussianLimit)
     (completedMeasure gaussianLimit) brownianUsualFiltration brownian

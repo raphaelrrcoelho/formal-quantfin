@@ -27,6 +27,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open MeasureTheory ProbabilityTheory Boundary
 open scoped NNReal
 
+/-- The classical first-contact rule `classicalContactRule`, instantiated on the constructed
+Brownian model and its raw natural filtration. -/
 noncomputable def brownianClassicalContactRule {K r q σ S : ℝ}
     {p : ℝ → ℝ → ℝ} {b : ℝ → ℝ}
     (hp : DividendPutSolution (normalizedRate r σ) (normalizedRate q σ) p b)

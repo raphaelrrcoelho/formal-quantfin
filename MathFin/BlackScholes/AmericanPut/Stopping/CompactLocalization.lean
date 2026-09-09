@@ -53,6 +53,8 @@ theorem exists_compact_set_localization {F : ℝ × ℝ → ℝ} {C U : Set (ℝ
   · filter_upwards [hχone] with z hz
     simp [hz]
 
+/-- The set of `(t,w)` with `t < T` at which the price kernel's spatial argument
+`x₀+(r-q-σ^2/2)*t+σ*w` lies strictly above the boundary value `b (σ^2/2*(T-t))`. -/
 def kernelContinuation (b : ℝ → ℝ) (r q σ x₀ T : ℝ) : Set (ℝ × ℝ) :=
   {z | z.1 < T ∧ b (σ^2/2*(T-z.1)) < x₀+(r-q-σ^2/2)*z.1+σ*z.2}
 

@@ -27,6 +27,7 @@ namespace MathFin.BlackScholes.AmericanPut.Boundary
 open Set Filter
 open scoped Topology ContDiff
 
+/-- Closed space-time strip on `0 ≤ t ≤ T`, between the two moving endpoints `L` and `R`. -/
 def twoSidedStrip (L R : ℝ → ℝ) (T : ℝ) : Set (ℝ × ℝ) :=
   {z | 0 ≤ z.2 ∧ z.2 ≤ T ∧ L z.2 ≤ z.1 ∧ z.1 ≤ R z.2}
 

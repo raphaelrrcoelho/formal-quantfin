@@ -30,6 +30,8 @@ open scoped NNReal
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+/-- The put payoff `max (K - gbmValue S (r-q) σ (θ ω) (W (θ ω) ω)) 0` at the stopped stock value,
+discounted by `exp (-r*θ ω)`. -/
 noncomputable def putReward (W : ℝ≥0 → Ω → ℝ) (K r q σ S : ℝ) (θ : Ω → ℝ≥0) (ω : Ω) : ℝ :=
   Real.exp (-r*(θ ω : ℝ))*max (K-MathFin.gbmValue S (r-q) σ (θ ω) (W (θ ω) ω)) 0
 

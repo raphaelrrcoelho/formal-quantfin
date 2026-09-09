@@ -28,6 +28,7 @@ namespace MathFin.BlackScholes.AmericanPut.Boundary
 open Set Filter
 open scoped Topology ContDiff
 
+/-- The stationary barrier `η * (Real.exp (lam * x) - 1)`, which vanishes at `x = 0`. -/
 noncomputable def expBarrier (η lam x : ℝ) : ℝ := η * (Real.exp (lam * x) - 1)
 
 theorem expBarrier_smooth (η lam : ℝ) : ContDiff ℝ ∞ (expBarrier η lam) := by

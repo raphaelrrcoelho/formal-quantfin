@@ -36,6 +36,7 @@ theorem zeroDividend_stock_curvature {k : ℝ} {p : ℝ → ℝ → ℝ} {b : �
     0 < deriv (deriv (stockBoundary E σ expiry b)) T :=
   dividend_stock_curvature (dividendPutSolution_zero_iff.mpr hp) hE hσ hT
 
+/-- Stock-price boundary in time remaining: `E*Real.exp (b (σ^2/2*τ))`. -/
 noncomputable def remainingTimeBoundary (E σ : ℝ) (b : ℝ → ℝ) (τ : ℝ) : ℝ :=
   E*Real.exp (b (σ^2/2*τ))
 

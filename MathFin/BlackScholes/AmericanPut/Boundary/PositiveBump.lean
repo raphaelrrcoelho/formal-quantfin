@@ -28,6 +28,7 @@ namespace MathFin.BlackScholes.AmericanPut.Boundary
 open Set
 open scoped ContDiff
 
+/-- The quartic `x ^ 2 * (L - x) ^ 2`, vanishing to second order at `0` and at `L`. -/
 noncomputable def positiveBump (L x : ℝ) : ℝ := x^2*(L-x)^2
 
 theorem positiveBump_contDiff (L : ℝ) : ContDiff ℝ ∞ (positiveBump L) := by
@@ -67,6 +68,8 @@ theorem positiveBump_operator {L M D x : ℝ} (hL : 0 < L) (hD : |D| ≤ M) :
   rw [hid]
   positivity
 
+/-- `positiveBump L` scaled by `η` and by the time factor
+`Real.exp (-(M ^ 2 + 16 / L ^ 2) * (t - a))`. -/
 noncomputable def decayingBump (L M η a x t : ℝ) : ℝ :=
   η*Real.exp (-(M^2+16/L^2)*(t-a))*positiveBump L x
 

@@ -28,6 +28,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory
 open scoped Topology
 
+/-- Extension of the boundary datum `g` to depth `x`, as the fixed-density integral
+`∫ s in Ioi 0, heatBoundaryKernel s 1 * g (t-x^2*s)`. -/
 noncomputable def heatBoundaryExtension (g : ℝ → ℝ) (x t : ℝ) : ℝ :=
   ∫ s in Ioi 0, heatBoundaryKernel s 1 * g (t-x^2*s)
 

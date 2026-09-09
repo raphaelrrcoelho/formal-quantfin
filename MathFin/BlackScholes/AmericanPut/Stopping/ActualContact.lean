@@ -27,10 +27,14 @@ open scoped NNReal Topology
 
 variable {Ω : Type*}
 
+/-- Log-price path from `x` with drift `k-h-1` and volatility `Real.sqrt 2`, evaluated at
+the capped time `min t T`. -/
 noncomputable def canonicalLogPath (W : ℝ≥0 → Ω → ℝ) (k h x : ℝ)
     (T t : ℝ≥0) (ω : Ω) : ℝ :=
   x+(k-h-1)*(min t T : ℝ)+Real.sqrt 2*W (min t T) ω
 
+/-- Gap between the canonical price at remaining time `T-min t T` and the put payoff, both
+taken along `canonicalLogPath`. -/
 noncomputable def canonicalGap (W : ℝ≥0 → Ω → ℝ) (k h x : ℝ)
     (T t : ℝ≥0) (ω : Ω) : ℝ :=
   canonicalPrice k h (canonicalLogPath W k h x T t ω) ((T : ℝ)-(min t T : ℝ))-
@@ -78,6 +82,8 @@ theorem canonicalGap_adapted (hk : 0 ≤ k) (hW : Adapted 𝓕 W) (x : ℝ) (T :
     (hx.prodMk (measurable_const (a := (T : ℝ)-(min t T : ℝ))))
   exact hp.sub (by unfold putPayoff; fun_prop)
 
+/-- The rule stopping at the first zero of `canonicalGap`, that is, at first contact of the
+price with the payoff. -/
 noncomputable def canonicalContactRule (hk : 0 ≤ k) (hW : Adapted 𝓕 W)
     (hpaths : ∀ ω, Continuous (fun t => W t ω)) (x : ℝ) (T : ℝ≥0) : BoundedRule 𝓕 T :=
   firstContactRule (Z := canonicalGap W k h x T)

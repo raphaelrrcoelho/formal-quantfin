@@ -24,14 +24,19 @@ Public entry points include `smoothPositive`, `smoothPositiveSlope`, `smoothMini
 
 namespace MathFin.BlackScholes.AmericanPut.Boundary
 
+/-- Smooth approximation to `max x 0`: `(x + Real.sqrt (x^2+δ^2))/2`. -/
 noncomputable def smoothPositive (δ x : ℝ) : ℝ :=
   (x + Real.sqrt (x^2+δ^2))/2
 
+/-- Slope of the smoothed positive part: `(1 + x/Real.sqrt (x^2+δ^2))/2`. -/
 noncomputable def smoothPositiveSlope (δ x : ℝ) : ℝ :=
   (1+x/Real.sqrt (x^2+δ^2))/2
 
+/-- Smooth approximation to `min x z`: `x - smoothPositive δ (x-z)`. -/
 noncomputable def smoothMinimum (δ x z : ℝ) : ℝ := x-smoothPositive δ (x-z)
 
+/-- Three-point detector `smoothMinimum δ x z - smoothPositive δ y`, comparing a smoothed
+minimum of `x` and `z` against a smoothed positive part of `y`. -/
 noncomputable def smoothValley (δ x y z : ℝ) : ℝ :=
   smoothMinimum δ x z - smoothPositive δ y
 

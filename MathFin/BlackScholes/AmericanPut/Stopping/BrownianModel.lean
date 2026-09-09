@@ -29,6 +29,7 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
+/-- The natural filtration of the constructed Brownian motion on the path space `ℝ≥0 → ℝ`. -/
 noncomputable def brownianFiltration : Filtration ℝ≥0 (inferInstance : MeasurableSpace (ℝ≥0 → ℝ)) :=
   Filtration.natural brownian (fun t => (measurable_brownian t).stronglyMeasurable)
 
@@ -39,6 +40,8 @@ theorem brownian_adapted : Adapted brownianFiltration brownian :=
   (Filtration.stronglyAdapted_natural
     (fun t => (measurable_brownian t).stronglyMeasurable)).adapted
 
+/-- The finite-horizon American put value of the constructed Brownian model, taken over the
+rules of the raw natural filtration `brownianFiltration`. -/
 noncomputable def brownianAmericanPut (K r q σ S : ℝ) (T : ℝ≥0) : ℝ :=
   americanPutValue gaussianLimit brownianFiltration brownian K r q σ S T
 

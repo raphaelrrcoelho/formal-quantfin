@@ -23,6 +23,7 @@ Public entry points include `movingLineTransform`, `movingLineTransform_deriv_x`
 
 namespace MathFin.BlackScholes.AmericanPut.Boundary
 
+/-- `V` read in coordinates moving with the line `x = d - c * t`: `V (y + (d - c * t)) t`. -/
 noncomputable def movingLineTransform (V : ℝ → ℝ → ℝ) (c d y t : ℝ) : ℝ :=
   V (y + (d - c * t)) t
 

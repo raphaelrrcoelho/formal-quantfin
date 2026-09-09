@@ -22,6 +22,8 @@ open Set Filter MeasureTheory ProbabilityTheory
 variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
   {𝓕 : Filtration ℕ ‹MeasurableSpace Ω›} {Z : ℕ → Ω → ℝ}
 
+/-- The first index in `[0,N]` at which the Bellman value meets the reward, that is at which
+`finiteBellman P 𝓕 Z N i-Z (min i N)` vanishes. -/
 noncomputable def finiteBellmanContact (P : Measure Ω) (𝓕 : Filtration ℕ ‹MeasurableSpace Ω›)
     (Z : ℕ → Ω → ℝ) (N : ℕ) : Ω → ℕ :=
   hittingBtwn (fun i ω => finiteBellman P 𝓕 Z N i ω-Z (min i N) ω) {0} 0 N

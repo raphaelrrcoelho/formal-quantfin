@@ -25,6 +25,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory ProbabilityTheory Boundary
 open scoped NNReal Topology
 
+/-- Discounted put reward of exercising at the capped time `min t T`, for strike `1` and
+spot `Real.exp x` on the Brownian driver. -/
 noncomputable def canonicalRewardProcess (k h x : ℝ) (T t : ℝ≥0) (ω : ℝ≥0 → ℝ) : ℝ :=
   putReward brownian 1 k h (Real.sqrt 2) (Real.exp x) (fun _ => min t T) ω
 
@@ -39,6 +41,7 @@ theorem canonicalRewardProcess_bound {k h : ℝ} (hk : 0 ≤ k) (x : ℝ) (T t :
   rw [canonicalRewardProcess,Real.norm_eq_abs,abs_of_nonneg (putReward_nonneg _ _ _ _ _ _ _ _)]
   exact putReward_le_strike brownian (by norm_num) hk (Real.exp_pos x).le _ ω
 
+/-- The stopping time of `brownianUsualActualContactRule`. -/
 noncomputable def brownianUsualActualContactTime {k h : ℝ} (hk : 0 ≤ k) (x : ℝ) (T : ℝ≥0) :
     (ℝ≥0 → ℝ) → ℝ≥0 :=
   @BoundedRule.time (ℝ≥0 → ℝ) (completedMeasurableSpace gaussianLimit) brownianUsualFiltration T

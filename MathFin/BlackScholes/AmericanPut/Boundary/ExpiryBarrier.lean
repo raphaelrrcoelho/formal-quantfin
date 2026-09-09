@@ -26,6 +26,8 @@ namespace MathFin.BlackScholes.AmericanPut.Boundary
 open Set Filter
 open scoped Topology ContDiff
 
+/-- The expiry barrier `(Real.sqrt t - x) ^ 2 / (16 * Real.sqrt t)`: a spatial quadratic
+vanishing at `x = Real.sqrt t`. -/
 noncomputable def expiryBarrier (x t : ℝ) : ℝ :=
   (Real.sqrt t - x)^2 / (16 * Real.sqrt t)
 

@@ -30,6 +30,8 @@ namespace MathFin.BlackScholes.AmericanPut.Boundary.Comparison
 open Set Filter
 open scoped Topology ContDiff
 
+/-- `straightDifference` in line-relative coordinates:
+`lineDifference p k h c d y t = straightDifference p k h c d (y + (d - c * t)) t`. -/
 noncomputable def lineDifference (p : ℝ → ℝ → ℝ) (k h c d : ℝ) : ℝ → ℝ → ℝ :=
   movingLineTransform (straightDifference p k h c d) c d
 

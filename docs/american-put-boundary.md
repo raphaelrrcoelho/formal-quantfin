@@ -10,8 +10,28 @@ proves, on positive time-to-expiry:
 
 These are geometric, chord-inequality statements. The contribution does not
 assert classical boundary second derivatives, strictly positive logarithmic
-curvature, or convexity when `q > r`. The source development's additional
-classical-regularity results are not the target of this port.
+curvature, or convexity when `q > r`.
+
+**This is a claimed resolution of an open problem, and should be read as one.**
+`docs/open-problems.md` Tier 1 §1 records `0 < q < r` as open in the literature —
+convexity proved at `q = 0` (Chen–Chadam–Cheng–Saunders; Ekström), disproved for
+`q > r`. The theorems below cover `0 ≤ q ≤ r`, the whole open region and both
+endpoints. The proof is machine-checked and axiom-clean, but it is new, was
+substantially AI-assisted, and has not been refereed.
+
+**A second, conditional development also ships here.** About 36 of the 173 modules
+(~3,500 lines) reach neither headline theorem: the six `Stopping/Classical*` modules
+and `Boundary/{NearExpiry, IncrementPositivity, StrictBoundarySpeed, FlatTail,
+StockConclusion, …}`. They are stated over an assumed classical solution
+`Boundary.DividendPutSolution`, a 17-field structure that **nothing in this port shows
+inhabited**, and they terminate in `Stopping/ClassicalBridge.lean`'s
+`brownian_boundary_curvature_of_price_identification`, whose own docstring names
+`hprice` an outstanding verification obligation. Results on that track — including
+`brownianUsual_boundary_conclusions`, the only `B'' > 0` statement in the tree — are
+therefore of unknown vacuity. The two headline declarations carry no such hypothesis
+and route around the track entirely; that is the point of the stopping-value
+construction. The source development's classical-regularity results are present in the
+import closure but are **not claimed by these two entries**.
 
 ## Public declarations and benchmark entries
 

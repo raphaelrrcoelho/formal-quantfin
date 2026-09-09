@@ -29,6 +29,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open MeasureTheory ProbabilityTheory Boundary
 open scoped NNReal
 
+/-- The raw Brownian filtration with the `gaussianLimit`-null measurable sets adjoined at each
+time, via `augFiltration`. -/
 noncomputable def brownianAugFiltration :=
   MathFin.ItoIntegralProcessLocalMartingaleGeneral.augFiltration (μ := gaussianLimit) measurable_brownian
 

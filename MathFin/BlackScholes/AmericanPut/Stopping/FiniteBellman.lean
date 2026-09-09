@@ -25,11 +25,15 @@ open Set Filter MeasureTheory ProbabilityTheory
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+/-- Backward Bellman recursion with `n` steps left from index `i`: it is `Z i` for `n = 0`, and
+otherwise the pointwise maximum of `Z i` and `P[bellmanAux P 𝓕 Z n (i+1) | 𝓕 i]`. -/
 noncomputable def bellmanAux (P : Measure Ω) (𝓕 : Filtration ℕ ‹MeasurableSpace Ω›)
     (Z : ℕ → Ω → ℝ) : ℕ → ℕ → Ω → ℝ
   | 0, i => Z i
   | n+1, i => fun ω => max (Z i ω) (P[bellmanAux P 𝓕 Z n (i+1) | 𝓕 i] ω)
 
+/-- The Bellman value at index `i` for horizon `N`: the recursion run for the `N-i` remaining
+steps from index `min i N`, so it is frozen at `Z N` past the horizon. -/
 noncomputable def finiteBellman (P : Measure Ω) (𝓕 : Filtration ℕ ‹MeasurableSpace Ω›)
     (Z : ℕ → Ω → ℝ) (N i : ℕ) : Ω → ℝ :=
   bellmanAux P 𝓕 Z (N-i) (min i N)

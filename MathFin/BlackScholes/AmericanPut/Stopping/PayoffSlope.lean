@@ -70,6 +70,9 @@ theorem putPayoff_hasDerivAt_neg {b : ℝ} (hb : b < 0) : HasDerivAt putPayoff (
   filter_upwards [Iio_mem_nhds hb] with x hx
   exact putPayoff_of_nonpos (show x < 0 from hx).le
 
+/-- The difference quotient
+`exp (-k*t) * (putPayoff (x+D) - putPayoff (b+D)) / (x-b)`: a discounted log-payoff slope
+between `b` and `x`, both displaced by `D`. -/
 noncomputable def discountedPutSlope (k b x t D : ℝ) : ℝ :=
   (Real.exp (-k*t)*(putPayoff (x+D)-putPayoff (b+D)))/(x-b)
 

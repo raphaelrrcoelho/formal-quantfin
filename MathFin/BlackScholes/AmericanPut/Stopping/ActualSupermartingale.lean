@@ -42,6 +42,8 @@ theorem canonicalPrice_transition {k h : ℝ} (hk : 0 ≤ k) {i j T : ℝ≥0}
   rw [← mul_assoc,hexp,htime,NNReal.coe_sub hij,NNReal.coe_sub hjT] at he
   exact he
 
+/-- The canonical price along the Brownian log-state at remaining time `T-min t T`,
+discounted by `Real.exp (-k*(min t T))`. -/
 noncomputable def canonicalDiscountedPrice (k h x : ℝ) (T t : ℝ≥0) (ω : ℝ≥0 → ℝ) : ℝ :=
   Real.exp (-k*(min t T : ℝ≥0))*canonicalPrice k h
     (brownianLogState (k-h-1) (Real.sqrt 2) x (min t T) ω) ((T : ℝ)-(min t T : ℝ≥0))

@@ -23,6 +23,8 @@ namespace MathFin.BlackScholes.AmericanPut.Boundary
 
 open scoped ContDiff
 
+/-- The spatial quadratic `1 + x ^ 2` carrying the exponential time factor
+`Real.exp ((2 + |k - h - 1|) * t)`. -/
 noncomputable def localizationBarrier (k h x t : ℝ) : ℝ :=
   Real.exp ((2+|k-h-1|)*t)*(1+x^2)
 

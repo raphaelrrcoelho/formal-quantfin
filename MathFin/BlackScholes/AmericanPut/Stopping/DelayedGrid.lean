@@ -21,11 +21,13 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory ProbabilityTheory
 open scoped NNReal Topology
 
+/-- The `i`-th capped grid time delayed by a waiting time: `u+cappedGridTime T δ i`. -/
 def delayedGridTime (u T δ : ℝ≥0) (i : ℕ) : ℝ≥0 := u+cappedGridTime T δ i
 
 theorem delayedGridTime_mono (u T δ : ℝ≥0) : Monotone (delayedGridTime u T δ) :=
   fun _ _ hij => add_le_add le_rfl (cappedGridTime_mono T δ hij)
 
+/-- The Brownian filtration sampled along the delayed grid times. -/
 noncomputable def delayedGridFiltration (u T δ : ℝ≥0) :=
   sampledFiltration brownianFiltration (delayedGridTime u T δ) (delayedGridTime_mono u T δ)
 
@@ -54,6 +56,8 @@ theorem delayedBellmanAux_eq_markov {Z : ℕ → ℝ → ℝ} {C : ℝ}
     rw [hω]
     exact congrArg (max _) htω
 
+/-- The discounted put reward from spot `Real.exp x`, exercised at the deterministic time
+`delayedGridTime u T δ i`. -/
 noncomputable def delayedGridReward (K r q σ x : ℝ) (u T δ : ℝ≥0) (i : ℕ) : (ℝ≥0 → ℝ) → ℝ :=
   putReward brownian K r q σ (Real.exp x) (fun _ => delayedGridTime u T δ i)
 

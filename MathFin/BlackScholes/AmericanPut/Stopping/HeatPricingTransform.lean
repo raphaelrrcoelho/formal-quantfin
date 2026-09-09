@@ -26,9 +26,13 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory
 open scoped Topology ContDiff
 
+/-- The exponential gauge factor `exp ((-(k-h-1)/2)*(x-L) + (-(k+(k-h-1)^2/4))*(t-a))` of the
+heat-to-pricing change of variables. -/
 noncomputable def pricingGauge (k h L a x t : ℝ) : ℝ :=
   Real.exp ((-(k-h-1)/2)*(x-L) + (-(k+(k-h-1)^2/4))*(t-a))
 
+/-- A heat solution `V` read as a pricing function: the gauge times `V` at shifted space `z.1-L`
+and doubled time `2*(z.2-a)`. -/
 noncomputable def priceFromHeat (V : ℝ × ℝ → ℝ) (k h L a : ℝ) (z : ℝ × ℝ) : ℝ :=
   pricingGauge k h L a z.1 z.2 * V (z.1-L,2*(z.2-a))
 

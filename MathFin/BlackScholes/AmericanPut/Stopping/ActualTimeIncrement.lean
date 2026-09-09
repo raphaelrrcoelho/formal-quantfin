@@ -27,6 +27,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter Boundary
 open scoped Topology ContDiff
 
+/-- Increment of the canonical price over a time step `δ`:
+`canonicalPrice k h x (t+δ)-canonicalPrice k h x t`. -/
 noncomputable def canonicalTimeIncrement (k h δ x t : ℝ) : ℝ :=
   canonicalPrice k h x (t+δ)-canonicalPrice k h x t
 

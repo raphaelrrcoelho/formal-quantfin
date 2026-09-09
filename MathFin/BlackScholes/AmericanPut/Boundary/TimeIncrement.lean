@@ -28,11 +28,16 @@ namespace MathFin.BlackScholes.AmericanPut.Boundary
 open Set Filter Comparison
 open scoped Topology ContDiff
 
+/-- Increment of the price `p` over a time step `δ`: `p x (t+δ)-p x t`. -/
 noncomputable def timeIncrement (p : ℝ → ℝ → ℝ) (δ x t : ℝ) : ℝ := p x (t+δ)-p x t
 
+/-- The time increment divided by the stationary profile:
+`timeIncrement p δ x t / profile (k-h-1) k x`. -/
 noncomputable def incrementGauge (p : ℝ → ℝ → ℝ) (k h δ x t : ℝ) : ℝ :=
   timeIncrement p δ x t / profile (k-h-1) k x
 
+/-- First-order coefficient of the equation satisfied by `incrementGauge`:
+`k-h-1+2*logSlope (profile (k-h-1) k) x`. -/
 noncomputable def incrementDrift (k h x : ℝ) : ℝ := k-h-1+2*logSlope (profile (k-h-1) k) x
 
 namespace DividendPutSolution

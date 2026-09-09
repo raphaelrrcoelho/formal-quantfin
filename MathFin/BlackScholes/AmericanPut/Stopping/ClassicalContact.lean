@@ -47,6 +47,8 @@ theorem classicalCandidate_adapted (hp : DividendPutSolution k h p b)
   have hm := hc.measurable.comp ((hW s).mono (𝓕.mono (min_le_left t T)) le_rfl)
   exact measurable_const.mul (measurable_const.mul hm)
 
+/-- The put reward for exercise at the deterministic time `min t T`, so it is frozen once `t`
+passes maturity. -/
 noncomputable def frozenPutReward (W : ℝ≥0 → Ω → ℝ) (K r q σ S : ℝ) (T t : ℝ≥0) : Ω → ℝ :=
   putReward W K r q σ S (fun _ => min t T)
 
@@ -65,6 +67,8 @@ theorem frozenPutReward_continuous (hW : ∀ ω, Continuous (fun t => W t ω)) (
   unfold frozenPutReward putReward MathFin.gbmValue
   fun_prop
 
+/-- The gap `classicalCandidate - frozenPutReward` between the discounted classical price and
+the discounted payoff. -/
 noncomputable def classicalGap (W : ℝ≥0 → Ω → ℝ) (K r q σ S : ℝ)
     (p : ℝ → ℝ → ℝ) (T t : ℝ≥0) (ω : Ω) : ℝ :=
   classicalCandidate W K r q σ S p T t ω - frozenPutReward W K r q σ S T t ω
@@ -92,6 +96,8 @@ theorem classicalGap_terminal (hp : DividendPutSolution k h p b)
     classicalGap W K r q σ S p T T ω = 0 := by
   simp only [classicalGap,classicalCandidate_maturity hp W hK hS,frozenPutReward,min_self,sub_self]
 
+/-- The rule that exercises at the first zero of `classicalGap`, admissible by
+`firstContactRule`. -/
 noncomputable def classicalContactRule (hp : DividendPutSolution k h p b)
     (hadapt : Adapted 𝓕 W) (hpaths : ∀ ω, Continuous (fun t => W t ω))
     (hK : 0 < K) (hS : 0 < S) (T : ℝ≥0) : BoundedRule 𝓕 T :=

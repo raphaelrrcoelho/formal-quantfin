@@ -86,6 +86,8 @@ theorem value_strict_continuation_iff (hW : Measurable W.uncurry)
 
 end General
 
+/-- The exercise threshold `brownianUsualExerciseBoundary` in the canonical normalization
+`K = 1`, `σ = Real.sqrt 2`, at the maturity `t.toNNReal`. -/
 noncomputable def canonicalStockBoundary (k h t : ℝ) : ℝ :=
   brownianUsualExerciseBoundary 1 k h (Real.sqrt 2) t.toNNReal
 

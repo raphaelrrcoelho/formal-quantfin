@@ -31,6 +31,8 @@ theorem brownianLogState_adapted (β σ x : ℝ) :
   intro t
   exact measurable_const.add (measurable_const.mul (brownian_adapted t))
 
+/-- The same rectangle exit rule as `actualRectangleExitRule`, built on the raw Brownian
+filtration. -/
 noncomputable def rawRectangleExitRule (k h x R : ℝ) (δ : ℝ≥0) :
     BoundedRule brownianFiltration δ :=
   rectangleExitRule (brownianLogState_adapted (k-h-1) (Real.sqrt 2) x)
@@ -39,9 +41,13 @@ noncomputable def rawRectangleExitRule (k h x R : ℝ) (δ : ℝ≥0) :
 theorem rawRectangleExitRule_time (k h x R : ℝ) (δ : ℝ≥0) (ω : ℝ≥0 → ℝ) :
     (rawRectangleExitRule k h x R δ).time ω = actualRectangleExitTime k h x R δ ω := rfl
 
+/-- The discounted canonical price as a function of `z = (elapsed time, Brownian value)`:
+`Real.exp (-k*z.1)*canonicalPrice k h (x+(k-h-1)*z.1+Real.sqrt 2*z.2) ((T : ℝ)-z.1)`. -/
 noncomputable def canonicalDiscountedPlane (k h x : ℝ) (T : ℝ≥0) (z : ℝ × ℝ) : ℝ :=
   Real.exp (-k*z.1)*canonicalPrice k h (x+(k-h-1)*z.1+Real.sqrt 2*z.2) ((T : ℝ)-z.1)
 
+/-- Space-time set where `z.1` lies in `[0,δ]` and `(k-h-1)*z.1+Real.sqrt 2*z.2` has
+absolute value at most `R`. -/
 def driverRectangle (k h R : ℝ) (δ : ℝ≥0) : Set (ℝ × ℝ) :=
   {z | 0 ≤ z.1 ∧ z.1 ≤ δ ∧ |(k-h-1)*z.1+Real.sqrt 2*z.2| ≤ R}
 

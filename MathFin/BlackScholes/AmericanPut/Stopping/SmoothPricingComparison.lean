@@ -24,10 +24,14 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory
 open scoped Topology ContDiff
 
+/-- The parabolic operator `∂ₜ F - ∂ₓ∂ₓ F - (k-h-1)*∂ₓ F + k*F`, with `z.1` the space variable
+and `z.2` the time variable. -/
 noncomputable def pricingOperator (k h : ℝ) (F : ℝ × ℝ → ℝ) (z : ℝ × ℝ) : ℝ :=
   deriv (fun t => F (z.1,t)) z.2 - deriv (deriv (fun x => F (x,z.2))) z.1 -
     (k-h-1)*deriv (fun x => F (x,z.2)) z.1 + k*F z
 
+/-- The smooth-test subsolution property on `U`: at every `z ∈ U`, every `C³` function `F` that
+agrees with `u` at `z` and dominates it nearby satisfies `pricingOperator k h F z ≤ 0`. -/
 def SmoothPricingSubsolutionOn (k h : ℝ) (u : ℝ × ℝ → ℝ) (U : Set (ℝ × ℝ)) : Prop :=
   ∀ z ∈ U, ∀ F : ℝ × ℝ → ℝ, ContDiff ℝ 3 F → F z = u z →
     (∀ᶠ y in 𝓝 z, u y ≤ F y) → pricingOperator k h F z ≤ 0

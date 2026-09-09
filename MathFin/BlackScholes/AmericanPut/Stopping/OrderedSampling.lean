@@ -22,6 +22,7 @@ open scoped NNReal Topology
 
 variable {Ω : Type*} [MeasurableSpace Ω] {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›}
 
+/-- The pointwise minimum `fun ω => min (θ.time ω) (η.time ω)` of two rules with horizon `T`. -/
 def BoundedRule.minimum {T : ℝ≥0} (θ η : BoundedRule 𝓕 T) : BoundedRule 𝓕 T where
   time := fun ω => min (θ.time ω) (η.time ω)
   stopping := by

@@ -26,9 +26,12 @@ open scoped NNReal
 
 variable {Ω : Type*} [mΩ : MeasurableSpace Ω] (P : Measure Ω)
 
+/-- The `P`-completion of the ambient σ-algebra: the sets that agree `P`-almost everywhere
+with an `mΩ`-measurable set. -/
 @[reducible] noncomputable def completedMeasurableSpace : MeasurableSpace Ω :=
   eventuallyMeasurableSpace mΩ (ae P)
 
+/-- The completion of `P`, read as a measure on the completed σ-algebra. -/
 noncomputable def completedMeasure : @Measure Ω (completedMeasurableSpace P) := P.completion
 
 theorem ambient_le_completion : mΩ ≤ completedMeasurableSpace P :=
@@ -43,6 +46,7 @@ theorem integral_completion_original {f : Ω → ℝ} (hf : StronglyMeasurable f
     (∫ ω, f ω ∂completedMeasure P) = ∫ ω, f ω ∂P := by
   rw [integral_trim (ambient_le_completion P) hf,completion_trim_original]
 
+/-- The same filtration `𝓕`, regarded as a filtration of the completed ambient σ-algebra. -/
 noncomputable def completedAmbientFiltration (𝓕 : Filtration ℝ≥0 mΩ) :
     Filtration ℝ≥0 (completedMeasurableSpace P) where
   seq := fun t => 𝓕 t

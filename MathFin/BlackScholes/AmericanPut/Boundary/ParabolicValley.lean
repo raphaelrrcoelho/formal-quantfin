@@ -40,6 +40,8 @@ theorem second_deriv_nonneg_at_local_min {F : ℝ → ℝ} {x : ℝ}
   simp only [deriv_const'] at hz
   linarith
 
+/-- The smooth valley detector of `U` at the three points of `w`, less the time penalty
+`η * t` taken at the first point. -/
 noncomputable def valleyOnTriple (U : ℝ → ℝ → ℝ) (δ η : ℝ) (w : SpaceTimeTriple) : ℝ :=
   smoothValley δ (U w.1.1 w.1.2) (U w.2.1.1 w.2.1.2) (U w.2.2.1 w.2.2.2) - η*w.1.2
 

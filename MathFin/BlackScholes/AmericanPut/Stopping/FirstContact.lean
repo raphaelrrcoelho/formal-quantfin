@@ -63,6 +63,7 @@ theorem measurable_zero_hit (hadapt : Adapted 𝓕 Z)
   rw [he]
   exact measurableSet_eq_fun hm measurable_const
 
+/-- The infimum of the times `t ≤ T` at which `Z t ω` vanishes. -/
 noncomputable def firstContactTime (Z : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (ω : Ω) : ℝ≥0 :=
   sInf {t | t ≤ T ∧ Z t ω = 0}
 
@@ -86,6 +87,8 @@ theorem firstContactTime_le_iff (hcont : ∀ ω, Continuous (fun t => Z t ω))
     exact (csInf_le (show BddBelow {u | u ≤ T ∧ Z u ω = 0} from ⟨0,fun _ _ => zero_le⟩)
       ⟨hs.2.trans (min_le_right t T),hzero⟩).trans (hs.2.trans (min_le_left t T))
 
+/-- The first contact time as an admissible bounded rule, for a nonnegative continuous adapted
+`Z` that vanishes at the horizon `T`. -/
 noncomputable def firstContactRule (hadapt : Adapted 𝓕 Z)
     (hcont : ∀ ω, Continuous (fun t => Z t ω)) (hnonneg : ∀ t ω, 0 ≤ Z t ω)
     (T : ℝ≥0) (hterminal : ∀ ω, Z T ω = 0) : BoundedRule 𝓕 T where

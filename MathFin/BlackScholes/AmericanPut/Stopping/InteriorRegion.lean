@@ -27,6 +27,8 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory ProbabilityTheory Boundary
 open scoped NNReal Topology
 
+/-- The classical price/payoff gap on the time/driver plane: time `Real.toNNReal z.1`, driver
+frozen at `z.2`. -/
 noncomputable def planeClassicalGap (p : ℝ → ℝ → ℝ) (K r q σ S : ℝ) (T : ℝ≥0)
     (z : ℝ × ℝ) : ℝ :=
   classicalGap (fun _ (_ : Unit) => z.2) K r q σ S p T (Real.toNNReal z.1) ()
@@ -59,6 +61,8 @@ theorem planeClassicalGap_eq {Ω : Type*} (W : ℝ≥0 → Ω → ℝ)
   simp [planeClassicalGap,classicalGap,classicalCandidate,classicalLogSpot,
     frozenPutReward,putReward,Real.toNNReal_coe,min_eq_left ht]
 
+/-- The plane points with time in `[0,T]`, driver in `[-(n+1),n+1]`, gap at least
+`localizationEps n`, and at least that much maturity left. -/
 def interiorRegion (p : ℝ → ℝ → ℝ) (K r q σ S : ℝ) (T : ℝ≥0) (n : ℕ) : Set (ℝ × ℝ) :=
   (Icc 0 (T : ℝ) ×ˢ Icc (-(n : ℝ)-1) ((n : ℝ)+1)) ∩
     {z | localizationEps n ≤ planeClassicalGap p K r q σ S T z ∧

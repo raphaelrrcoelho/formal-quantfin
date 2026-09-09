@@ -28,6 +28,7 @@ namespace MathFin.BlackScholes.AmericanPut.Boundary
 open Filter
 open scoped Topology ContDiff
 
+/-- The spatial Black--Scholes operator with dividends: `f'' + (k - h - 1) * f' - k * f`. -/
 noncomputable def dividendSpatialOperator (k h : ℝ) (f : ℝ → ℝ) (x : ℝ) : ℝ :=
   deriv (deriv f) x + (k - h - 1) * deriv f x - k * f x
 

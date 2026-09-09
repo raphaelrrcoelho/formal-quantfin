@@ -26,6 +26,7 @@ Public entry points include `slopeGap`, `slopeGap_differentiable`, `slopeGap_der
 
 namespace MathFin.BlackScholes.AmericanPut.Boundary.Comparison
 
+/-- The gap `logSlope f z - logSlope g z - 1` between the two logarithmic slopes. -/
 noncomputable def slopeGap (f g : ℝ → ℝ) (z : ℝ) : ℝ :=
   logSlope f z - logSlope g z - 1
 

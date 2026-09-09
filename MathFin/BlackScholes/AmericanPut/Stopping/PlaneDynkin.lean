@@ -25,9 +25,13 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter MeasureTheory ProbabilityTheory
 open scoped NNReal Topology
 
+/-- The time integral `∫ s in Ioc 0 t, planeGenerator G (s, brownian s ω)` of the generator
+along the Brownian path. -/
 noncomputable def planeDrift (G : ℝ × ℝ → ℝ) (t : ℝ≥0) (ω : ℝ≥0 → ℝ) : ℝ :=
   ∫ s in Ioc 0 t, planeGenerator G (s,brownian s ω) ∂MathFin.ItoIntegralL2.timeMeasure
 
+/-- The increment of `G` along the Brownian path with its drift subtracted:
+`G (t, brownian t ω) - G (0, brownian 0 ω) - planeDrift G t ω`. -/
 noncomputable def planeResidual (G : ℝ × ℝ → ℝ) (t : ℝ≥0) (ω : ℝ≥0 → ℝ) : ℝ :=
   G (t,brownian t ω)-G (0,brownian 0 ω)-planeDrift G t ω
 

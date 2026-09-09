@@ -27,6 +27,9 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open MathFin.BlackScholes.AmericanPut.Boundary
 open scoped ContDiff NNReal
 
+/-- The discounted classical price `K*p` read in physical time `t` and Brownian coordinate `w`:
+log spot `x₀+(r-q-σ^2/2)*t+σ*w`, remaining normalized time `σ^2/2*(T-t)`, discount
+`exp (-r*t)`. -/
 noncomputable def brownianPriceKernel (p : ℝ → ℝ → ℝ) (K r q σ x₀ T t w : ℝ) : ℝ :=
   Real.exp (-r*t)*(K*p (x₀+(r-q-σ^2/2)*t+σ*w) (σ^2/2*(T-t)))
 

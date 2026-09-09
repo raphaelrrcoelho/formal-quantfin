@@ -28,8 +28,11 @@ open scoped NNReal
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+/-- A stopping time for `𝓕`, valued in `WithTop ℝ≥0`, that is bounded by the horizon `T`
+only `P`-almost surely. -/
 structure AEBoundedRule (P : Measure Ω) (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›)
     (T : ℝ≥0) where
+  /-- The stopping time, possibly infinite. -/
   time : Ω → WithTop ℝ≥0
   stopping : IsStoppingTime 𝓕 time
   ae_le_horizon : ∀ᵐ ω ∂P, time ω ≤ T
@@ -42,6 +45,8 @@ variable {P : Measure Ω} {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›} {
 noncomputable def finiteTime (θ : AEBoundedRule P 𝓕 T) (ω : Ω) : ℝ≥0 :=
   (θ.time ω).untopD 0
 
+/-- The rule truncated at the horizon: the pointwise bounded rule with time
+`min (θ.time ω) T`. -/
 noncomputable def clip (θ : AEBoundedRule P 𝓕 T) : BoundedRule 𝓕 T :=
   BoundedRule.ofWithTop (fun ω => min (θ.time ω) T)
     (θ.stopping.min_const T) (fun ω => min_le_right (θ.time ω) T)
@@ -82,6 +87,7 @@ namespace BoundedRule
 
 variable {P : Measure Ω} {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›} {T : ℝ≥0}
 
+/-- A pointwise bounded rule read as an almost-surely bounded one. -/
 def toAEBoundedRule (θ : BoundedRule 𝓕 T) : AEBoundedRule P 𝓕 T where
   time := fun ω => θ.time ω
   stopping := θ.stopping
@@ -94,10 +100,12 @@ theorem toAEBoundedRule_finiteTime (θ : BoundedRule 𝓕 T) :
 
 end BoundedRule
 
+/-- The expected discounted put rewards ranging over all almost-surely bounded rules. -/
 noncomputable def aeExerciseValues (P : Measure Ω) (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›)
     (W : ℝ≥0 → Ω → ℝ) (K r q σ S : ℝ) (T : ℝ≥0) : Set ℝ :=
   range (fun θ : AEBoundedRule P 𝓕 T => ∫ ω, putReward W K r q σ S θ.finiteTime ω ∂P)
 
+/-- Supremum of `aeExerciseValues`, the put value over almost-surely bounded rules. -/
 noncomputable def aeAmericanPutValue (P : Measure Ω) (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›)
     (W : ℝ≥0 → Ω → ℝ) (K r q σ S : ℝ) (T : ℝ≥0) : ℝ :=
   sSup (aeExerciseValues P 𝓕 W K r q σ S T)
@@ -133,6 +141,8 @@ theorem aeExerciseValues_bddAbove (P : Measure Ω) [IsProbabilityMeasure P]
   rw [aeExerciseValues_eq]
   exact exerciseValues_bddAbove hW hK hr hS
 
+/-- Supremum of the spots `S` in `[0,K]` at which `aeAmericanPutValue` equals the immediate
+payoff `K-S`. -/
 noncomputable def aeExerciseThreshold (P : Measure Ω) (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace Ω›)
     (W : ℝ≥0 → Ω → ℝ) (K r q σ : ℝ) (T : ℝ≥0) : ℝ :=
   sSup {S | 0 ≤ S ∧ S ≤ K ∧ aeAmericanPutValue P 𝓕 W K r q σ S T = K-S}

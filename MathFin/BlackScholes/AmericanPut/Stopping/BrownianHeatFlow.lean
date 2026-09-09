@@ -22,6 +22,8 @@ open Set Filter MeasureTheory ProbabilityTheory
 open MathFin.FeynmanKacHeatEquation
 open scoped NNReal Topology
 
+/-- Heat evolution as a Brownian expectation: the integral of `f (x+B_t)` under
+`gaussianLimit`. -/
 noncomputable def brownianHeatFlow (f : ℝ → ℝ) (t : ℝ≥0) (x : ℝ) : ℝ :=
   ∫ ω, f (x+brownian t ω) ∂gaussianLimit
 
@@ -57,6 +59,8 @@ theorem brownianHeatFlow_eq_kernel {f : ℝ → ℝ} (hf : Continuous f) {t : �
       (isBrownianReal_brownian.toIsPreBrownianReal.hasLaw_eval (t : ℝ).toNNReal).map_eq
       hf (show (0 : ℝ) < t by exact_mod_cast ht) x).symm
 
+/-- The heat flow of `f` over time `(2*(t-a)).toNNReal` from the shifted point
+`x+(k-h-1)*(t-a)`, discounted by `exp (-k*(t-a))`. -/
 noncomputable def linearPriceEvolution (f : ℝ → ℝ) (k h a x t : ℝ) : ℝ :=
   Real.exp (-k*(t-a))*brownianHeatFlow f (2*(t-a)).toNNReal (x+(k-h-1)*(t-a))
 

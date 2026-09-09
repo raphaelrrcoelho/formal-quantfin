@@ -24,9 +24,11 @@ namespace MathFin.BlackScholes.AmericanPut.Stopping
 open Set Filter Boundary
 open scoped Topology ContDiff
 
+/-- The exponential branch `(1-exp d) * exp (-m*(x-d))`, taking the value `1-exp d` at `x = d`. -/
 noncomputable def stationaryPutTail (m d x : ℝ) : ℝ :=
   (1-Real.exp d)*Real.exp (-m*(x-d))
 
+/-- The intrinsic value `1-exp x` below the join `d`, and `stationaryPutTail m d` above it. -/
 noncomputable def stationaryPutCap (m d x : ℝ) : ℝ :=
   if x ≤ d then 1-Real.exp x else stationaryPutTail m d x
 
