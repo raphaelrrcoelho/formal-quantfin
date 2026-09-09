@@ -7,6 +7,10 @@ The generator never invents editorial fields, and reads ONLY main-repo sources
 (benchmarks + the side-car) — it has no dependency on the foundry, so the main
 repo self-reports independently.
 
+Benchmark entries may set ``metadata.alignment_source``. Distinct explicit
+sources are joined per file; files without one retain the legacy domain/textbook
+label.
+
 Per the standard, mechanically-git-derivable facts (toolchain, pins, commit,
 build status) are intentionally NOT duplicated here.
 
@@ -177,9 +181,13 @@ def build_doc(root: str) -> dict:
                 afp_issues.append(prov["issue"])
         d = by_file.setdefault(base, {"n": 0, "full": 0, "library_wrapper": 0,
                                       "reduced_core": 0, "placeholder": 0,
-                                      "domain": t.get("domain", "")})
+                                      "domain": t.get("domain", ""),
+                                      "alignment_sources": set()})
         d["n"] += 1
         d[status] = d.get(status, 0) + 1
+        source = md.get("alignment_source")
+        if isinstance(source, str) and source.strip():
+            d["alignment_sources"].add(source.strip())
 
     ready = totals["full"] + totals["library_wrapper"]
     # Two-stage is the shape; WHO fills each stage is read off the corpus, so this
@@ -274,7 +282,8 @@ def build_doc(root: str) -> dict:
     for base in sorted(by_file):
         d = by_file[base]
         alignment_statements.append({
-            "source": f"{d['domain']} ({DOMAIN_SOURCE})",
+            "source": ("; ".join(sorted(d["alignment_sources"]))
+                       or f"{d['domain']} ({DOMAIN_SOURCE})"),
             "lean": f"{d['n']} statements",
             "module": f"benchmarks/{base}",
             "status": (f"full {d['full']} · wrapper {d['library_wrapper']} · "

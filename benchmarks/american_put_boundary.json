@@ -1,0 +1,47 @@
+{
+  "description": "Geometric convexity of the continuous-time American put option exercise boundary in the constant-parameter Black-Scholes model; issue #175.",
+  "theorems": [
+    {
+      "id": "mf-american-put-log-boundary-convex",
+      "name": "American Put Option Logarithmic Exercise Boundary Convexity",
+      "description": "For positive strike K, risk-free interest rate r and volatility sigma, and constant dividend yield 0 <= q <= r, the logarithm log(B(tau)/K) of the continuous-time American put option exercise boundary is convex in positive time-to-expiry tau. B is defined from the optimal-stopping value on the completed usual filtration of the constructed Brownian motion. The conclusion is geometric convexity, not strict logarithmic curvature or existence of classical second derivatives. The literature records convexity as open for 0 < q < r (proved at q = 0, disproved for q > r); this entry covers that region, so it is a claimed resolution of an open problem, machine-checked and axiom-clean but new, substantially AI-assisted, and not refereed.",
+      "domain": "mathematical_finance",
+      "code": {
+        "lean": "import MathFin.BlackScholes.AmericanPut.Stopping.PhysicalBoundaryConvexity\n\nopen Set\nopen MathFin.BlackScholes.AmericanPut.Stopping\n\ntheorem american_put_log_boundary_convex {K r q σ : ℝ}\n    (hK : 0 < K) (hr : 0 < r) (hq : 0 ≤ q) (hqr : q ≤ r) (hσ : 0 < σ) :\n    ConvexOn ℝ (Ioi 0)\n      (fun τ : ℝ => Real.log (brownianUsualExerciseBoundary K r q σ τ.toNNReal / K)) :=\n  MathFin.BlackScholes.AmericanPut.Stopping.brownianUsualLogBoundary_convexOn hK hr hq hqr hσ\n"
+      },
+      "metadata": {
+        "alignment_source": "Robert Martin, AmericanPutConvexity, https://github.com/robertmartin8/AmericanPutConvexity/tree/9b2b208520341a63b64eef43c1ecb3c5708a8e63",
+        "reference": "Robert Martin, Log-convexity of the exercise boundary of an American put option; source development https://github.com/robertmartin8/AmericanPutConvexity/tree/9b2b208520341a63b64eef43c1ecb3c5708a8e63; MathFin issue #175.",
+        "difficulty": "advanced",
+        "formalization_status": "full",
+        "formalization_scope": "Derived from the concrete stopping-value definition, not from an assumed classical free-boundary solution or a convexity specification. Admissible rules are all stopping times of the constructed completed usual Brownian filtration with values pointwise bounded by the horizon; AEHorizonValue proves equality with the value and threshold obtained from extended stopping times bounded by the horizon only almost surely. The value uses GBM with drift r-q and discount rate r. The proof derives the normalized boundary and its line-interval property using a straight-line comparison, a parabolic three-point argument and a terminal barrier, then proves geometric convexity and rescales to physical units. Covers q=0 and q=r as well as 0<q<r, only at positive time-to-expiry. Does not assert universality over arbitrary probability-space representations, C2 regularity, strict log-convexity, or a result for q>r.",
+        "provenance": {
+          "source": "american-put-convexity",
+          "revision": "9b2b208520341a63b64eef43c1ecb3c5708a8e63",
+          "note": "Ported from Robert Martin's Apache-2.0 AmericanPutConvexity development. The proof and formalization were substantially AI-assisted; see docs/american-put-boundary.md. Verification evidence for this port is recorded separately in the repository's generated axiom audit and verification ledger."
+        }
+      }
+    },
+    {
+      "id": "mf-american-put-stock-boundary-strict-convex",
+      "name": "American Put Option Exercise Boundary Strict Convexity",
+      "description": "For positive strike K, risk-free interest rate r and volatility sigma, and constant dividend yield 0 <= q <= r, the continuous-time American put option exercise boundary B(tau) is strictly convex in positive time-to-expiry tau. B is defined from the optimal-stopping value on the completed usual filtration of the constructed Brownian motion. Strict convexity is in the chord-inequality sense; the statement does not assert a classical second derivative or B'' > 0. The literature records convexity as open for 0 < q < r (proved at q = 0, disproved for q > r); this entry covers that region, so it is a claimed resolution of an open problem, machine-checked and axiom-clean but new, substantially AI-assisted, and not refereed.",
+      "domain": "mathematical_finance",
+      "code": {
+        "lean": "import MathFin.BlackScholes.AmericanPut.Stopping.PhysicalBoundaryConvexity\n\nopen Set\nopen MathFin.BlackScholes.AmericanPut.Stopping\n\ntheorem american_put_stock_boundary_strict_convex {K r q σ : ℝ}\n    (hK : 0 < K) (hr : 0 < r) (hq : 0 ≤ q) (hqr : q ≤ r) (hσ : 0 < σ) :\n    StrictConvexOn ℝ (Ioi 0)\n      (fun τ : ℝ => brownianUsualExerciseBoundary K r q σ τ.toNNReal) :=\n  MathFin.BlackScholes.AmericanPut.Stopping.brownianUsualStockBoundary_strictConvexOn hK hr hq hqr hσ\n"
+      },
+      "metadata": {
+        "alignment_source": "Robert Martin, AmericanPutConvexity, https://github.com/robertmartin8/AmericanPutConvexity/tree/9b2b208520341a63b64eef43c1ecb3c5708a8e63",
+        "reference": "Robert Martin, Log-convexity of the exercise boundary of an American put option; source development https://github.com/robertmartin8/AmericanPutConvexity/tree/9b2b208520341a63b64eef43c1ecb3c5708a8e63; MathFin issue #175.",
+        "difficulty": "advanced",
+        "formalization_status": "full",
+        "formalization_scope": "Derived for the same actual stopping boundary as the logarithmic-convexity entry. The proof first obtains nonstrict convexity of the logarithmic boundary using only its nonincrease. A terminal barrier excludes a flat tail, so convexity and nonincrease imply strict decrease; strict convexity of the exponential then yields strict convexity of the stock-price boundary. The physical-unit theorem assumes only K>0, r>0, sigma>0 and 0<=q<=r. Its domain is positive time-to-expiry. No boundary-smoothness premise is imposed, and no classical second-derivative or q>r conclusion is claimed.",
+        "provenance": {
+          "source": "american-put-convexity",
+          "revision": "9b2b208520341a63b64eef43c1ecb3c5708a8e63",
+          "note": "Ported from Robert Martin's Apache-2.0 AmericanPutConvexity development. The proof and formalization were substantially AI-assisted; see docs/american-put-boundary.md. Verification evidence for this port is recorded separately in the repository's generated axiom audit and verification ledger."
+        }
+      }
+    }
+  ]
+}

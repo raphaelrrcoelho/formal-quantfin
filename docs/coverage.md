@@ -26,12 +26,35 @@ Report `reduced_core` and `placeholder` separately. **Spec-with-axiomatized-conc
 
 ## Current Audit
 
-> **Live status (2026-09-01):** corpus
-> **370**, **339 full + 18 wrappers = 357/370 delivery-ready**, 13 reduced cores, 0 placeholders.
-> Ledger 370 fresh / 0 stale / 0 missing; `lake build MathFin` and `lake lint` green, `pytest`
-> 50/50, `AxiomAuditGen` at 330 guards (239 curated). The **Glosten–Milgrom spread** below is the
-> newest round; the bracket compensator, the conditional bracket, the unconditional one, the
-> **contracts tower**, the **Itô chain rule**, and its coherence pass follow.
+### American put option boundary: geometric contribution (#175)
+
+The two new entries below carry `formalization_status: full`. Their hypotheses
+are only `K > 0`, `r > 0`, `σ > 0`, and `0 ≤ q ≤ r`. They concern the
+actual stopping boundary on the constructed completed usual Brownian
+filtration, not an assumed pricing-equation solution. Their time domain is
+`Set.Ioi 0`. See [the declaration and definition map](american-put-boundary.md)
+for the model, proof, and source provenance.
+
+| Benchmark ID | Mathematical conclusion | Lean module and declaration | Faithfulness |
+|---|---|---|---|
+| `mf-american-put-log-boundary-convex` | `log(B(τ)/K)` is convex in positive time-to-expiry | `MathFin/BlackScholes/AmericanPut/Stopping/PhysicalBoundaryConvexity.lean`, `MathFin.BlackScholes.AmericanPut.Stopping.brownianUsualLogBoundary_convexOn` | `full` |
+| `mf-american-put-stock-boundary-strict-convex` | `B(τ)` is strictly convex in positive time-to-expiry | Same module, `MathFin.BlackScholes.AmericanPut.Stopping.brownianUsualStockBoundary_strictConvexOn` | `full` |
+
+The native default `lake build` passed, including `AxiomAuditGen.lean` and
+the curated audit. Both new benchmark statements passed native verification;
+the ledger reports 372 fresh, 0 stale, and 0 missing entries. These checks
+support the formal statements, not independent mathematical peer review. No `C²`
+boundary regularity, classical curvature, strict log-convexity, or `q > r`
+result is claimed by these entries. The dated baseline below records the
+prior corpus audit, not a verification of this addition.
+
+> **Live status (2026-09-08):** corpus
+> **372**, **341 full + 18 wrappers = 359/372 delivery-ready**, 13 reduced cores, 0 placeholders.
+> Ledger 372 fresh / 0 stale / 0 missing; `lake build MathFin` and `lake lint` green, `pytest`
+> 50/50, `AxiomAuditGen` at 332 guards (243 curated). The **American put exercise-boundary
+> geometry** and the **Glosten–Milgrom spread** below are the newest rounds; the bracket
+> compensator, the conditional bracket, the unconditional one, the **contracts tower**, the
+> **Itô chain rule**, and its coherence pass follow.
 >
 > **2026-09-01 — adverse selection alone sets the spread (369 → 370).** A new section
 > `MathFin/Execution/` opens with Glosten–Milgrom (1985). `Execution.spread_pos_of_model` proves
